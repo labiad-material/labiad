@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123b68">
+<title>Fiche du matériel | بطاقة العتاد</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 25px 12px;
+  background: #edf2f8;
+  color: #203047;
+  font-family: Arial, Tahoma, sans-serif;
+}
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px #102b491c;
+}
+
+/* رأس البطاقة */
+.header {
+  background: linear-gradient(135deg, #102f54, #245b91);
+  color: white;
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.logo {
+  width: 95px;
+  height: 95px;
+  object-fit: contain;
+  background: white;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.header-text {
+  flex: 1;
+}
+
+.header h1 {
+  margin: 0 0 9px;
+  font-size: 23px;
+  line-height: 1.5;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 21px;
+  direction: rtl;
+}
+
+.header p {
+  margin: 8px 0 0;
+  color: #dce9f8;
+  font-size: 14px;
+}
+
+/* محتوى البطاقة */
+.content {
+  padding: 25px;
+}
+
+.identity {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 28px;
+  padding-bottom: 25px;
+  border-bottom: 2px solid #e7edf5;
+}
+.photo {
+  width: 280px;
+  height: 245px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: #f5f8fc;
+  border: 1px solid #dce5ef;
+  border-radius: 14px;
+  overflow: hidden;
+  perspective: 800px;
+}
+
+.photo img {
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
+  transform-style: preserve-3d;
+  animation: horizontalRotation 6s linear infinite;
+}
+
+/* دوران أفقي حول المحور العمودي */
+@keyframes horizontalRotation {
+  from {
+    transform: perspective(800px) rotateY(0deg);
+  }
+  to {
+    transform: perspective(800px) rotateY(360deg);
+  }
+}
+
+.identity-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.label {
+  color: #64748b;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.name {
+  color: #123b68;
+  font-size: 27px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  overflow-wrap: anywhere;
+}
+
+.code {
+  display: inline-block;
+  padding: 9px 16px;
+  background: #e8f0fa;
+  color: #123b68;
+  border-radius: 7px;
+  font-weight: bold;
+}
+
+/* عناوين الأقسام */
+.section-title {
+  margin: 28px 0 17px;
+  padding: 0 0 10px;
+  border-bottom: 3px solid #dce7f3;
+  color: #123b68;
+  font-size: 20px;
+}
+
+.section-title-ar {
+  direction: rtl;
+  text-align: right;
+}
+
+/* شبكة المواصفات */
+.specs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.spec {
+  padding: 15px;
+  background: #f7f9fc;
+  border: 1px solid #e5ebf3;
+  border-radius: 10px;
+  min-width: 0;
+}
+
+.spec-value {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.status {
+  padding: 18px;
+  border-radius: 10px;
+  background: #eef4fb;
+  color: #123b68;
+  text-align: center;
+  line-height: 1.9;
+}
+
+.footer {
+  background: #123b68;
+  color: white;
+  text-align: center;
+  padding: 17px;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ملاءمة الهاتف */
+@media (max-width: 650px) {
+  body {
+    padding: 10px 7px;
+  }
+
+  .header {
+    flex-direction: column;
+    padding: 18px 12px;
+  }
+
+  .logo {
+    width: 78px;
+    height: 78px;
+  }
+
+  .header h1 {
+    font-size: 19px;
+  }
+
+  .header h2 {
+    font-size: 19px;
+  }
+
+  .content {
+    padding: 17px;
+  }
+
+  .identity {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    text-align: right;
+    gap: 12px;
+  }
+
+  .photo {
+    width: 40%;
+    min-width: 105px;
+    max-width: 280px;
+    height: 190px;
+    flex-shrink: 0;
+  }
+
+  .identity-info {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+    text-align: right;
+  }
+
+  .name {
+    font-size: 19px;
+  }
+
+  .code {
+    padding: 7px 9px;
+    font-size: 12px;
+  }
+
+  .specs {
+    grid-template-columns: 1fr;
+  }
+}
+  body {
+    padding: 10px 7px;
+  }
+
+  .header {
+    flex-direction: column;
+    padding: 18px 12px;
+  }
+
+  .logo {
+    width: 78px;
+    height: 78px;
+  }
+
+  .header h1 {
+    font-size: 19px;
+  }
+
+  .header h2 {
+    font-size: 19px;
+  }
+
+  .content {
+    padding: 17px;
+  }
+
+  .identity {
+  flex-direction: row;
+  align-items: center;
+  text-align: right;
+  gap: 15px;
+}
+
+.photo {
+  width: 40%;
+  max-width: 280px;
+  height: 210px;
+  flex-shrink: 0;
+}
+
+.identity-info {
+  flex: 1;
+  min-width: 0;
+}
+
+  .photo {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .identity-info {
+    width: 100%;
+  }
+
+  .specs {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo img {
+    animation: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<main class="container">
+
+  <header class="header">
+
+    <!-- شعار المديرية -->
+    <img
+      class="logo"
+      src="assets/embleme.png"
+      alt="شعار الحماية المدنية"
+      onerror="this.style.display='none'"
+    >
+
+    <div class="header-text">
+      <h1>
+        DIRECTION DE LA PROTECTION CIVILE
+        DE LA WILAYA DE GHARDAÏA
+      </h1>
+
+      <h2>
+        مديرية الحماية المدنية لولاية غرداية
+      </h2>
+
+      <p>FICHE TECHNIQUE DU MATÉRIEL | بطاقة بيانات العتاد</p>
+    </div>
+
+  </header>
+
+  <div class="content">
+
+    <div id="message" class="status">
+      Chargement des données...
+      <br>
+      جارٍ تحميل بيانات العتاد...
+    </div>
+
+    <section id="card" hidden>
+
+      <div class="identity">
+
+        <div class="photo">
+
+          <img
+            id="equipmentImage"
+            alt="Photo du matériel"
+            hidden
+          >
+
+          <span id="noImage">
+            Photo du matériel
+            <br>
+            صورة العتاد
+          </span>
+
+        </div>
+
+        <div class="identity-info">
+
+          <div class="label">
+            Désignation | تسمية العتاد
+          </div>
+
+          <div id="equipmentName" class="name">—</div>
+
+          <div class="label">
+            Numéro d'inventaire | رقم الجرد
+          </div>
+
+          <span id="equipmentCode" class="code">—</span>
+
+        </div>
+
+      </div>
+
+      <h2 class="section-title">
+        Caractéristiques techniques
+      </h2>
+
+      <h2 class="section-title section-title-ar">
+        المواصفات التقنية
+      </h2>
+
+      <div id="specifications" class="specs"></div>
+
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    Direction de la Protection Civile de la Wilaya de Ghardaïa
+    <br>
+    مديرية الحماية المدنية لولاية غرداية
+  </footer>
+
+</main>
+<script>
+"use strict";
+
+/* رابط دالة Supabase الحالية */
+const FUNCTION_URL =
+"https://ubxvlawbotfkhegrtmgr.supabase.co/functions/v1/materiel-card";
+
+const params = new URLSearchParams(window.location.search);
+const publicId = params.get("public_id");
+
+const message = document.getElementById("message");
+const card = document.getElementById("card");
+const image = document.getElementById("equipmentImage");
+const noImage = document.getElementById("noImage");
+
+/* عرض رسائل الخطأ والتحميل باللغتين */
+function showMessage(fr, ar) {
+  message.hidden = false;
+  message.replaceChildren();
+
+  const first = document.createElement("div");
+  first.textContent = fr;
+
+  const second = document.createElement("div");
+  second.textContent = ar;
+  second.lang = "ar";
+  second.dir = "rtl";
+
+  message.append(first, second);
+}
+
+/* البحث عن أول قيمة متوفرة */
+function findValue(data, names) {
+  for (const name of names) {
+    const value = data[name];
+
+    if (
+      value !== undefined &&
+      value !== null &&
+      typeof value !== "object" &&
+      String(value).trim() !== ""
+    ) {
+      return value;
+    }
+  }
+
+  return "";
+}
+
+/* ترجمة أسماء بعض المواصفات */
+function translateLabel(key) {
+  const labels = {
+    code: "رقم الجرد | Numéro d'inventaire",
+    code_materiel: "رقم العتاد | Code matériel",
+    brand: "العلامة التجارية | Marque",
+    model: "الطراز | Modèle",
+    category_fr: "الصنف | Catégorie",
+    location: "الموقع | Emplacement",
+    status: "الحالة | État",
+    description_fr: "الوصف | Description",
+    department_fr: "المصلحة | Service",
+    designation_fr: "التسمية | Désignation"
+  };
+
+  return labels[key] || key.replaceAll("_", " ");
+}
+
+/* عرض بيانات العتاد */
+function displayData(result) {
+
+  let data =
+    result.data ??
+    result.equipment ??
+    result.materiel ??
+    result;
+
+  if (Array.isArray(data)) {
+    data = data[0];
+  }
+
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    throw new Error("Données du matériel invalides.");
+  }
+
+  const name = findValue(data, [
+    "designation_fr",
+    "designation_ar",
+    "nom_fr",
+    "name_fr",
+    "designation",
+    "nom",
+    "name",
+    "libelle"
+  ]);
+
+  const code = findValue(data, [
+    "code",
+    "code_materiel",
+    "numero_inventaire",
+    "inventory_number",
+    "reference"
+  ]);
+
+  const photo = findValue(data, [
+    "image_url",
+    "photo_url",
+    "image",
+    "photo",
+    "url_photo",
+    "image_path"
+  ]);
+
+  document.getElementById("equipmentName").textContent =
+    name || "Matériel | العتاد";
+
+  document.getElementById("equipmentCode").textContent =
+    code || publicId || "—";
+
+  /* عرض الصورة */
+  image.hidden = true;
+  noImage.hidden = false;
+
+  if (photo && /^https?:\/\//i.test(String(photo))) {
+
+    image.onload = function () {
+      image.hidden = false;
+      noImage.hidden = true;
+    };
+
+    image.onerror = function () {
+      image.hidden = true;
+      noImage.hidden = false;
+      noImage.textContent =
+        "Image indisponible | الصورة غير متاحة";
+    };
+
+    image.src = photo;
+  }
+
+/* استبعاد حقول الصور والمعرّفات من المواصفات */
+const excluded = new Set([
+  "id",
+  "public_id",
+  "image_url",
+  "photo_url",
+  "image",
+  "photo",
+  "url_photo",
+  "image_path"
+]);
+  const specifications =
+    document.getElementById("specifications");
+
+  specifications.replaceChildren();
+
+  const entries = Object.entries(data).filter(
+    ([key, value]) =>
+      !excluded.has(key) &&
+      value !== null &&
+      value !== undefined &&
+      typeof value !== "object" &&
+      String(value).trim() !== ""
+  );
+
+  for (const [key, value] of entries) {
+
+    const item = document.createElement("div");
+    item.className = "spec";
+
+    const label = document.createElement("div");
+    label.className = "label";
+    label.textContent = translateLabel(key);
+
+    const content = document.createElement("div");
+    content.className = "spec-value";
+    content.textContent = String(value);
+
+    item.append(label, content);
+    specifications.append(item);
+  }
+
+  card.hidden = false;
+  message.hidden = true;
+}
+
+/* تحميل البيانات من Supabase */
+async function loadEquipment() {
+
+  if (!publicId) {
+    showMessage(
+      "Identifiant du matériel manquant dans l'URL.",
+      "معرّف العتاد غير موجود في الرابط."
+    );
+    return;
+  }
+
+  try {
+
+    const url = new URL(FUNCTION_URL);
+    url.searchParams.set("public_id", publicId);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    });
+
+    const contentType =
+      response.headers.get("content-type") || "";
+
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status);
+    }
+
+    if (!contentType.includes("application/json")) {
+      throw new Error("Réponse non JSON : " + contentType);
+    }
+
+    const result = await response.json();
+
+    if (result.error) {
+      throw new Error(
+        typeof result.error === "string"
+          ? result.error
+          : JSON.stringify(result.error)
+      );
+    }
+
+    displayData(result);
+
+  } catch (error) {
+
+    console.error("Erreur de chargement :", error);
+
+    showMessage(
+      "Impossible de charger la fiche. Vérifiez Supabase.",
+      "تعذّر تحميل البطاقة. تحقق من اتصال Supabase."
+    );
+  }
+}
+
+loadEquipment();
+</script>
+
+</body>
+</html>
