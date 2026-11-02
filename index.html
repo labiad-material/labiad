@@ -34,15 +34,17 @@ body {
   color: white;
   padding: 22px;
   display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 18px;
   text-align: center;
 }
 
 .logo {
   width: 95px;
   height: 95px;
+  flex: 0 0 95px;
   object-fit: contain;
   background: white;
   border-radius: 50%;
@@ -51,6 +53,7 @@ body {
 
 .header-text {
   flex: 1;
+  min-width: 0;
 }
 
 .header h1 {
@@ -202,27 +205,36 @@ body {
 }
 
 /* ملاءمة الهاتف */
+/* ملاءمة الهاتف */
 @media (max-width: 650px) {
   body {
     padding: 10px 7px;
   }
 
   .header {
-    flex-direction: column;
-    padding: 18px 12px;
+    flex-direction: row;
+    padding: 15px 8px;
+    gap: 7px;
   }
 
   .logo {
-    width: 78px;
-    height: 78px;
+    width: 54px;
+    height: 54px;
+    flex: 0 0 54px;
   }
 
   .header h1 {
-    font-size: 19px;
+    font-size: 12px;
+    line-height: 1.5;
   }
 
   .header h2 {
-    font-size: 19px;
+    font-size: 13px;
+  }
+
+  .header p {
+    font-size: 10px;
+    line-height: 1.5;
   }
 
   .content {
@@ -248,7 +260,6 @@ body {
   .identity-info {
     flex: 1;
     min-width: 0;
-    width: auto;
     text-align: right;
   }
 
@@ -259,64 +270,6 @@ body {
   .code {
     padding: 7px 9px;
     font-size: 12px;
-  }
-
-  .specs {
-    grid-template-columns: 1fr;
-  }
-}
-  body {
-    padding: 10px 7px;
-  }
-
-  .header {
-    flex-direction: column;
-    padding: 18px 12px;
-  }
-
-  .logo {
-    width: 78px;
-    height: 78px;
-  }
-
-  .header h1 {
-    font-size: 19px;
-  }
-
-  .header h2 {
-    font-size: 19px;
-  }
-
-  .content {
-    padding: 17px;
-  }
-
-  .identity {
-  flex-direction: row;
-  align-items: center;
-  text-align: right;
-  gap: 15px;
-}
-
-.photo {
-  width: 40%;
-  max-width: 280px;
-  height: 210px;
-  flex-shrink: 0;
-}
-
-.identity-info {
-  flex: 1;
-  min-width: 0;
-}
-
-  .photo {
-    width: 100%;
-    max-width: 280px;
-  }
-
-  .identity-info {
-    width: 100%;
   }
 
   .specs {
@@ -337,28 +290,41 @@ body {
 
   <header class="header">
 
-    <!-- شعار المديرية -->
-    <img
-      class="logo"
-      src="assets/embleme.png"
-      alt="شعار الحماية المدنية"
-      onerror="this.style.display='none'"
-    >
+  <!-- الشعار الأيسر -->
+  <img
+    class="logo"
+    src="assets/logPr.png"
+    alt="شعار المديرية"
+    onerror="this.style.display='none'"
+  >
 
-    <div class="header-text">
-      <h1>
-        DIRECTION DE LA PROTECTION CIVILE
-        DE LA WILAYA DE GHARDAÏA
-      </h1>
+  <!-- العنوان في الوسط -->
+  <div class="header-text">
 
-      <h2>
-        مديرية الحماية المدنية لولاية غرداية
-      </h2>
+    <h1>
+      DIRECTION DE LA PROTECTION CIVILE
+      DE LA WILAYA DE GHARDAÏA
+    </h1>
 
-      <p>FICHE TECHNIQUE DU MATÉRIEL | بطاقة بيانات العتاد</p>
-    </div>
+    <h2>
+      مديرية الحماية المدنية لولاية غرداية
+    </h2>
 
-  </header>
+    <p>
+      FICHE TECHNIQUE DU MATÉRIEL | بطاقة بيانات العتاد
+    </p>
+
+  </div>
+
+  <!-- الشعار الأيمن -->
+  <img
+    class="logo"
+    src="assets/logA.png"
+    alt="الشعار الثاني"
+    onerror="this.style.display='none'"
+  >
+
+</header>
 
   <div class="content">
 
@@ -570,6 +536,14 @@ function displayData(result) {
 const excluded = new Set([
   "id",
   "public_id",
+  "department_id",
+  "image_url",
+  "photo_url",
+  "image",
+  "photo",
+  "url_photo",
+  "image_path"
+]);
   "image_url",
   "photo_url",
   "image",
@@ -674,3 +648,27 @@ loadEquipment();
 
 </body>
 </html>
+function translateLabel(key) {
+  const labels = {
+    inventory_number: "رقم الجرد | Numéro d'inventaire",
+    designation_fr: "التسمية بالفرنسية | Désignation française",
+    designation_ar: "التسمية بالعربية | Désignation arabe",
+    category_fr: "الصنف | Catégorie",
+    category_ar: "الصنف | Catégorie",
+    brand: "العلامة التجارية | Marque",
+    model: "الطراز | Modèle",
+    location: "الموقع | Emplacement",
+    status: "الحالة | État",
+    description_fr: "الوصف بالفرنسية | Description française",
+    description_ar: "الوصف بالعربية | Description arabe",
+    department_fr: "المصلحة | Service",
+    department_ar: "المصلحة | Service",
+    serial_number: "الرقم التسلسلي | Numéro de série",
+    acquisition_date: "تاريخ الاقتناء | Date d'acquisition",
+    purchase_price: "سعر الاقتناء | Prix d'acquisition",
+    created_at: "تاريخ التسجيل | Date de création",
+    updated_at: "تاريخ التحديث | Date de mise à jour"
+  };
+
+  return labels[key] || key.replaceAll("_", " ");
+}
