@@ -181,7 +181,7 @@ th{background:#edf2f8;color:#163b67}
         </div>
 
         <div>
-          <label for="price">Prix d'achat | سعر الشراء (DZD)</label>
+          <label for="price">Matricule | الترقيم</label>
           <input id="price" type="number" min="0" step="0.01">
         </div>
 
@@ -617,6 +617,11 @@ function excelDateToISO(value) {
    EXCEL PREVIEW
 ========================================= */
 
+
+/* =========================================
+   EXCEL PREVIEW - IMPROVED
+========================================= */
+
 $("previewExcelBtn").addEventListener("click", async () => {
 
   const file = $("excelFile").files[0];
@@ -625,7 +630,6 @@ $("previewExcelBtn").addEventListener("click", async () => {
 
   $("importExcelBtn").disabled = true;
   $("excelPreview").innerHTML = "";
-
   clearMessage("excelMessage");
 
   if (!file) {
@@ -636,14 +640,45 @@ $("previewExcelBtn").addEventListener("click", async () => {
     return;
   }
 
-  const button = $("previewExcelBtn");
+  const extension = file.name.split(".").pop().toLowerCase();
 
+  if (!["xlsx", "xls"].includes(extension)) {
+    showMessage(
+      "excelMessage",
+      "Format invalide. Choisissez XLSX ou XLS. | اختر ملف Excel صحيحاً."
+    );
+    return;
+  }
+
+  const button = $("previewExcelBtn");
   setBusy(button, true, "Lecture...");
 
   try {
 
-    const buffer = await file.arrayBuffer();
+    if (typeof XLSX === "undefined") {
+      throw new Error("Bibliothèque Excel non chargée. Vérifiez Internet.");
+    }
 
+    // قراءة الملف باستعمال FileReader
+    const buffer = await new Promise((resolve, reject) => {
+
+      const reader = new FileReader();
+
+      reader.onload = () => resolve(reader.result);
+
+      reader.onerror = () => reject(
+        new Error("Impossible de lire le fichier. Fermez Excel et réessayez.")
+      );
+
+      reader.onabort = () => reject(
+        new Error("Lecture du fichier annulée.")
+      );
+
+      reader.readAsArrayBuffer(file);
+
+    });
+
+    // قراءة ملف Excel
     const workbook = XLSX.read(buffer, {
       type: "array",
       cellDates: true
@@ -661,9 +696,10 @@ $("previewExcelBtn").addEventListener("click", async () => {
     });
 
     if (!rows.length) {
-      throw new Error("الملف فارغ.");
+      throw new Error("الملف فارغ أو لا يحتوي على بيانات.");
     }
 
+    // التحقق من الأعمدة الإجبارية
     const required = [
       "inventory_number",
       "designation_fr",
@@ -678,14 +714,16 @@ $("previewExcelBtn").addEventListener("click", async () => {
       );
     }
 
+    // تجهيز البيانات
     excelRecords = rows.map(row => {
 
       const price =
         row.purchase_price === "" || row.purchase_price == null
-        ? null
-        : Number(row.purchase_price);
+          ? null
+          : Number(row.purchase_price);
 
       return {
+
         inventory_number: String(row.inventory_number ?? "").trim(),
 
         designation_fr: String(row.designation_fr ?? "").trim(),
@@ -721,9 +759,12 @@ $("previewExcelBtn").addEventListener("click", async () => {
         description_fr: String(row.description_fr ?? "").trim() || null,
 
         description_ar: String(row.description_ar ?? "").trim() || null
+
       };
+
     });
 
+    // التحقق من صحة البيانات
     const allowedStatuses = [
       "in_service",
       "maintenance",
@@ -735,18 +776,22 @@ $("previewExcelBtn").addEventListener("click", async () => {
       !r.inventory_number ||
       !r.designation_fr ||
       !r.designation_ar ||
-      (r.purchase_price !== null &&
-        (!Number.isFinite(r.purchase_price) || r.purchase_price < 0)) ||
+      (
+        r.purchase_price !== null &&
+        (!Number.isFinite(r.purchase_price) || r.purchase_price < 0)
+      ) ||
       !allowedStatuses.includes(r.status)
     );
 
     if (invalid.length) {
       excelRecords = [];
+
       throw new Error(
         "توجد بيانات ناقصة أو أسعار أو حالات غير صحيحة. راجع الملف."
       );
     }
 
+    // كشف أرقام الجرد المكررة
     const numbers = excelRecords.map(r => r.inventory_number);
 
     const duplicateRows = numbers.filter(
@@ -762,43 +807,64 @@ $("previewExcelBtn").addEventListener("click", async () => {
       );
     }
 
-    $("excelPreview").innerHTML = `
-      <p>
-        <strong>${excelRecords.length}</strong>
-        matériel(s) détecté(s) | عتاد تم العثور عليه
-      </p>
+    // استخراج جميع الأعمدة التي تحتوي على بيانات
+    const columns = Object.keys(excelRecords[0]).filter(key =>
+      excelRecords.some(r =>
+        r[key] !== null &&
+        r[key] !== undefined &&
+        String(r[key]).trim() !== ""
+      )
+    );
 
-      <table>
-        <thead>
-          <tr>
-            <th>رقم الجرد</th>
-            <th>Désignation</th>
-            <th>التسمية</th>
-            <th>Service</th>
-          </tr>
-        </thead>
+    // إنشاء جدول المعاينة تلقائياً
+    const table = document.createElement("table");
 
-        <tbody>
-          ${excelRecords.map(r => `
-            <tr>
-              <td>${escapeHtml(r.inventory_number)}</td>
-              <td>${escapeHtml(r.designation_fr)}</td>
-              <td dir="rtl">${escapeHtml(r.designation_ar)}</td>
-              <td>${escapeHtml(
-                [r.department_fr,r.department_ar]
-                  .filter(Boolean).join(" / ") || "غير محدد"
-              )}</td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
-    `;
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+
+    columns.forEach(key => {
+      const th = document.createElement("th");
+      th.textContent = key;
+      headerRow.appendChild(th);
+    });
+
+    thead.appendChild(headerRow);
+
+    const tbody = document.createElement("tbody");
+
+    excelRecords.forEach(record => {
+
+      const tr = document.createElement("tr");
+
+      columns.forEach(key => {
+
+        const td = document.createElement("td");
+        td.textContent = record[key] ?? "";
+
+        tr.appendChild(td);
+
+      });
+
+      tbody.appendChild(tr);
+
+    });
+
+    table.append(thead, tbody);
+
+    $("excelPreview").replaceChildren();
+
+    const summary = document.createElement("p");
+    summary.innerHTML =
+      "<strong>" + excelRecords.length +
+      "</strong> matériel(s) détecté(s) | عتاد تم العثور عليه";
+
+    $("excelPreview").append(summary, table);
 
     $("importExcelBtn").disabled = false;
 
     showMessage(
       "excelMessage",
-      "Aperçu chargé. Vérifiez les données avant l'importation. | تمت المعاينة، راجع البيانات قبل الاستيراد.",
+      "Aperçu chargé avec succès. Vérifiez toutes les colonnes avant importation. | تمت المعاينة بنجاح. راجع جميع الأعمدة قبل الاستيراد.",
       true
     );
 
@@ -810,14 +876,17 @@ $("previewExcelBtn").addEventListener("click", async () => {
 
     showMessage(
       "excelMessage",
-      "Erreur : " + error.message
+      "Erreur : " + (error.message || "Impossible de lire le fichier.")
     );
 
   } finally {
+
     setBusy(button, false);
+
   }
 
 });
+
 
 
 /* =========================================
