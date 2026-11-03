@@ -660,42 +660,17 @@ async function loadEquipment() {
 loadEquipment();
 
 /* ترجمة أسماء المواصفات */
+
 function translateLabel(key) {
   const labels = {
-    code: "رقم الجرد | Numéro d'inventaire",
-    code_materiel: "رقم العتاد | Code matériel",
-    inventory_number: "رقم الجرد | Numéro d'inventaire",
-
-    brand: "العلامة التجارية | Marque",
-    model: "الطراز | Modèle",
-
-    category_fr: "الصنف | Catégorie",
-    category_ar: "الصنف | Catégorie",
-
-    location: "الموقع | Emplacement",
-    status: "الحالة | État",
-
-    description_fr: "الوصف | Description",
-    description_ar: "الوصف | Description",
-
-    department_fr: "المصلحة | Service",
-    department_ar: "المصلحة | Service",
-
-    designation_fr: "التسمية بالفرنسية | Désignation française",
-    designation_ar: "التسمية بالعربية | Désignation arabe",
-
-    serial_number: "الرقم التسلسلي | Numéro de série",
-
     acquisition_date: "سنة الاستعمال | Année de mise en service",
     purchase_price: "الترقيم | Matricule",
-    currency_code: "السعة | Volume",
-
-    created_at: "تاريخ التسجيل | Date de création",
-    updated_at: "تاريخ التحديث | Date de mise à jour"
+    currency_code: "السعة | Volume"
   };
 
   return labels[key] || key.replaceAll("_", " ");
 }
+
 </script>
 </body>
 </html>
