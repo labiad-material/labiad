@@ -5,26 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#163b67">
 <title>Gestion du matériel | إدارة العتاد</title>
-
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Tahoma,sans-serif;background:#f2f5f9;color:#243247}
-header{background:#163b67;color:white;padding:20px;text-align:center}
+header{background:#163b67;color:#fff;padding:20px;text-align:center}
 header h1{margin:0 0 8px;font-size:23px}
 header p{margin:0}
-main{max-width:1200px;margin:25px auto;padding:0 15px}
-.card{background:white;padding:22px;margin-bottom:20px;border-radius:12px;box-shadow:0 3px 15px #152b4610}
-h2{margin-top:0;color:#163b67;font-size:21px}
+main{max-width:1250px;margin:25px auto;padding:0 15px}
+.card{background:#fff;padding:22px;margin-bottom:20px;border-radius:12px;box-shadow:0 3px 15px #152b4610}
+h2{margin:0 0 17px;color:#163b67;font-size:21px}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.field{min-width:0}
 label{display:block;font-weight:bold;font-size:13px;margin-bottom:5px}
 input,select,textarea,button{font:inherit}
-input,select,textarea{width:100%;padding:10px;border:1px solid #ccd5e1;border-radius:7px;background:white}
-textarea{min-height:70px;resize:vertical}
+input,select,textarea{width:100%;padding:10px;border:1px solid #ccd5e1;border-radius:7px;background:#fff;color:#243247}
+textarea{min-height:75px;resize:vertical}
 button{padding:10px 15px;border:0;border-radius:7px;cursor:pointer;font-weight:bold}
 button:disabled{opacity:.5;cursor:not-allowed}
-.primary{background:#163b67;color:white}
+.primary{background:#163b67;color:#fff}
 .secondary{background:#e7edf5;color:#163b67}
-.danger{background:#b42318;color:white}
+.danger{background:#b42318;color:#fff}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
 .message{padding:12px;border-radius:7px;margin:12px 0;display:none;overflow-wrap:anywhere;white-space:pre-wrap}
 .error{background:#feeceb;color:#9b1c15}
@@ -33,159 +33,169 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .toolbar input{flex:1;min-width:200px}
 .tablewrap{overflow-x:auto}
 table{border-collapse:collapse;width:100%;min-width:850px}
-th,td{padding:11px;border-bottom:1px solid #e5e9ef;text-align:left}
+th,td{padding:10px;border-bottom:1px solid #e5e9ef;text-align:left;vertical-align:top}
 th{background:#edf2f8;color:#163b67}
 .small{font-size:12px;color:#68778a;overflow-wrap:anywhere}
 #loginPanel{max-width:440px;margin:35px auto}
 #appPanel{display:none}
-#qrImage{max-width:260px;width:100%;height:auto}
 #qrPanel{text-align:center}
+#qrOutput{display:flex;justify-content:center;margin:15px auto}
+#qrOutput img,#qrOutput canvas{max-width:100%;height:auto}
 .hidden{display:none!important}
-#openCardLink{color:#163b67;font-weight:bold}
-@media(max-width:750px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:15px}}
-@media(max-width:480px){.grid{grid-template-columns:1fr}header h1{font-size:20px}}
+#openCardLink{color:#163b67;font-weight:bold;display:inline-block;margin:12px}
+.section-note{grid-column:1/-1;color:#163b67;font-weight:bold;border-bottom:1px solid #e5e9ef;padding:8px 0 5px;margin-top:5px}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.card{padding:15px}header h1{font-size:20px}}
 </style>
 </head>
-
 <body>
-
 <header>
   <h1>Direction de la Protection Civile de Ghardaïa</h1>
   <p>Gestion du matériel | إدارة العتاد</p>
 </header>
 
 <main>
-
-<!-- LOGIN -->
 <section id="loginPanel" class="card">
   <h2>Connexion administrateur | دخول المدير</h2>
-
   <form id="loginForm">
-    <label for="email">Adresse e-mail | البريد الإلكتروني</label>
-    <input id="email" type="email" autocomplete="username" required>
-
-    <br><br>
-
-    <label for="password">Mot de passe | كلمة المرور</label>
-    <input id="password" type="password" autocomplete="current-password" required>
-
-    <div class="actions">
-      <button class="primary" type="submit">
-        Se connecter | تسجيل الدخول
-      </button>
+    <div class="field">
+      <label for="email">Adresse e-mail | البريد الإلكتروني</label>
+      <input id="email" type="email" autocomplete="username" required>
     </div>
+    <br>
+    <div class="field">
+      <label for="password">Mot de passe | كلمة المرور</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+    </div>
+    <div class="actions"><button class="primary" type="submit">Se connecter | تسجيل الدخول</button></div>
   </form>
-
   <div id="loginMessage" class="message error"></div>
 </section>
 
-<!-- APPLICATION -->
 <section id="appPanel">
-
   <section class="card">
     <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
-      <h2>Parc matériel | حظيرة العتاد</h2>
-      <button id="logoutBtn" class="secondary" type="button">
-        Déconnexion | خروج
-      </button>
+      <h2 style="margin:0">Parc matériel | حظيرة العتاد</h2>
+      <button id="logoutBtn" class="secondary" type="button">Déconnexion | خروج</button>
     </div>
     <div id="appMessage" class="message"></div>
   </section>
 
-  <!-- EXCEL IMPORT -->
   <section class="card">
     <h2>Importation Excel | استيراد من Excel</h2>
-
     <label for="excelFile">Choisir un fichier Excel | اختر ملف Excel</label>
     <input id="excelFile" type="file" accept=".xlsx,.xls">
-
     <p class="small">
-      الأعمدة الأساسية المطلوبة:
-      inventory_number, designation_fr, designation_ar
+      الأعمدة الأساسية: inventory_number, designation_fr, designation_ar.
+      ويمكن إضافة بقية الأعمدة الموضحة في نموذج Excel.
     </p>
-
     <div class="actions">
-      <button id="previewExcelBtn" class="primary" type="button">
-        Prévisualiser | معاينة البيانات
-      </button>
-
-      <button id="importExcelBtn" class="secondary" type="button" disabled>
-        Importer dans Supabase | استيراد إلى قاعدة البيانات
-      </button>
+      <button id="previewExcelBtn" class="primary" type="button">Prévisualiser | معاينة البيانات</button>
+      <button id="importExcelBtn" class="secondary" type="button" disabled>Importer dans Supabase | استيراد</button>
     </div>
-
     <div id="excelMessage" class="message"></div>
     <div id="excelPreview" class="tablewrap"></div>
   </section>
 
-  <!-- ADD / EDIT EQUIPMENT -->
   <section class="card">
-
     <h2 id="formTitle">Ajouter un matériel | إضافة عتاد</h2>
-
     <form id="equipmentForm">
       <input type="hidden" id="recordId">
-
       <div class="grid">
-
-        <div>
+        <div class="section-note">Identification | التعريف بالعتاد</div>
+        <div class="field">
           <label for="inventory">Numéro d'inventaire | رقم الجرد *</label>
           <input id="inventory" required maxlength="100">
         </div>
-
-        <div>
-          <label for="designationFr">Désignation en français *</label>
+        <div class="field">
+          <label for="designationFr">Désignation française *</label>
           <input id="designationFr" required>
         </div>
-
-        <div>
+        <div class="field">
           <label for="designationAr">التسمية بالعربية *</label>
           <input id="designationAr" required dir="rtl">
         </div>
-
-        <div>
-          <label for="categoryFr">Catégorie (FR)</label>
-          <input id="categoryFr">
+        <div class="field">
+          <label for="categoryFr">Type / catégorie (FR) | النوع</label>
+          <input id="categoryFr" placeholder="Ambulance">
         </div>
-
-        <div>
-          <label for="categoryAr">الصنف (AR)</label>
-          <input id="categoryAr" dir="rtl">
+        <div class="field">
+          <label for="categoryAr">النوع / الصنف (AR)</label>
+          <input id="categoryAr" dir="rtl" placeholder="سيارة إسعاف">
         </div>
-
-        <div>
-          <label for="department">Service | المصلحة</label>
-          <select id="department">
-            <option value="">-- Non spécifié | غير محدد --</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="brand">Marque | العلامة</label>
+        <div class="field">
+          <label for="brand">Marque | العلامة التجارية</label>
           <input id="brand">
         </div>
-
-        <div>
+        <div class="field">
           <label for="model">Modèle | الطراز</label>
           <input id="model">
         </div>
-
-        <div>
-          <label for="serial">Numéro de série | الرقم التسلسلي</label>
-          <input id="serial">
+        <div class="field">
+          <label for="serialNumber">Numéro de série | الرقم التسلسلي</label>
+          <input id="serialNumber">
+        </div>
+        <div class="field">
+          <label for="registrationNumber">Matricule | الترقيم</label>
+          <input id="registrationNumber" placeholder="25-123-116">
+        </div>
+        <div class="field">
+          <label for="chassisNumber">Numéro de châssis (VIN) | رقم الهيكل</label>
+          <input id="chassisNumber">
+        </div>
+        <div class="field">
+          <label for="engineNumber">Numéro de moteur | رقم المحرك</label>
+          <input id="engineNumber">
         </div>
 
-        <div>
-          <label for="acquisitionDate">Date d'acquisition | تاريخ الاقتناء</label>
+        <div class="section-note">Acquisition et mise en service | الاقتناء ووضعه حيز الخدمة</div>
+        <div class="field">
+          <label for="purchasePrice">Purchase price | سعر الشراء</label>
+          <input id="purchasePrice" type="number" min="0" step="0.01">
+        </div>
+        <div class="field">
+          <label for="currencyCode">Currency code | رمز العملة</label>
+          <select id="currencyCode">
+            <option value="DZD">DZD – دينار جزائري</option>
+            <option value="EUR">EUR – Euro</option>
+            <option value="USD">USD – US Dollar</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="acquisitionDate">Acquisition date | تاريخ الاقتناء</label>
           <input id="acquisitionDate" type="date">
         </div>
-
-        <div>
-          <label for="price">Matricule | الترقيم</label>
-          <input id="price" type="number" min="0" step="0.01">
+        <div class="field">
+          <label for="commissioningYear">Année de mise en service | سنة وضعها حيز الخدمة</label>
+          <input id="commissioningYear" type="number" min="1900" max="2100" step="1" placeholder="2023">
+        </div>
+        <div class="field">
+          <label for="volume">Volume – capacité | السعة / الحجم</label>
+          <input id="volume" placeholder="12 m³">
+        </div>
+        <div class="field">
+          <label for="fuelType">Type de carburant | نوع الوقود</label>
+          <input id="fuelType" placeholder="Diesel / Essence">
+        </div>
+        <div class="field">
+          <label for="engineCapacity">Cylindrée | سعة المحرك</label>
+          <input id="engineCapacity" placeholder="2200 cm³">
+        </div>
+        <div class="field">
+          <label for="tankCapacity">Capacité du réservoir | سعة الخزان</label>
+          <input id="tankCapacity" placeholder="75 L">
         </div>
 
-        <div>
+        <div class="section-note">Affectation et état | التخصيص والحالة</div>
+        <div class="field">
+          <label for="department">Service utilisateur | المصلحة المستعملة</label>
+          <select id="department"><option value="">-- Non spécifié | غير محدد --</option></select>
+        </div>
+        <div class="field">
+          <label for="location">Lieu d'affectation | مكان التواجد</label>
+          <input id="location">
+        </div>
+        <div class="field">
           <label for="status">État | الحالة</label>
           <select id="status">
             <option value="in_service">En service | في الخدمة</option>
@@ -194,147 +204,84 @@ th{background:#edf2f8;color:#163b67}
             <option value="retired">Réformé | مشطوب</option>
           </select>
         </div>
-
-        <div>
-          <label for="location">Emplacement | الموقع</label>
-          <input id="location">
-        </div>
-
-        <div>
+        <div class="field">
           <label for="descriptionFr">Description (FR)</label>
           <textarea id="descriptionFr"></textarea>
         </div>
-
-        <div>
+        <div class="field">
           <label for="descriptionAr">الوصف (AR)</label>
           <textarea id="descriptionAr" dir="rtl"></textarea>
         </div>
-
+        <div class="field">
+          <label for="observationsFr">Observations (FR) | ملاحظات</label>
+          <textarea id="observationsFr"></textarea>
+        </div>
+        <div class="field">
+          <label for="observationsAr">الملاحظات (AR)</label>
+          <textarea id="observationsAr" dir="rtl"></textarea>
+        </div>
       </div>
 
       <div style="margin-top:20px;padding:15px;background:#f2f5f9;border-radius:8px">
         <label for="equipmentPhoto">Photo du matériel | صورة العتاد</label>
-
-        <input id="equipmentPhoto" type="file"
-          accept="image/jpeg,image/png,image/webp">
-
+        <input id="equipmentPhoto" type="file" accept="image/jpeg,image/png,image/webp">
         <p class="small">Formats acceptés : JPG, PNG, WEBP – Maximum 5 Mo</p>
-
-        <img id="photoPreview" class="hidden"
-          style="max-width:220px;max-height:180px;object-fit:contain;margin-top:10px;border-radius:8px">
+        <img id="photoPreview" class="hidden" alt="Aperçu de la photo" style="max-width:220px;max-height:180px;object-fit:contain;margin-top:10px;border-radius:8px">
       </div>
-
       <div class="actions">
-        <button class="primary" type="submit">
-          Enregistrer | حفظ
-        </button>
-
-        <button class="secondary" type="button" id="resetBtn">
-          Nouveau | جديد
-        </button>
+        <button class="primary" type="submit">Enregistrer | حفظ</button>
+        <button class="secondary" type="button" id="resetBtn">Nouveau | جديد</button>
       </div>
-
     </form>
   </section>
 
-  <!-- EQUIPMENT LIST -->
   <section class="card">
     <h2>Liste du matériel | قائمة العتاد</h2>
-
     <div class="toolbar">
-      <input id="searchBox"
-        placeholder="Rechercher / البحث برقم الجرد أو التسمية">
-
-      <button class="secondary" id="refreshBtn" type="button">
-        Actualiser | تحديث
-      </button>
+      <input id="searchBox" placeholder="Rechercher / البحث برقم الجرد أو التسمية أو الترقيم">
+      <button class="secondary" id="refreshBtn" type="button">Actualiser | تحديث</button>
     </div>
-
     <div class="tablewrap">
       <table>
-        <thead>
-          <tr>
-            <th>N° inventaire</th>
-            <th>Désignation</th>
-            <th>المسمى</th>
-            <th>État / الحالة</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody id="equipmentRows">
-          <tr>
-            <td colspan="5">Chargement... | جار التحميل...</td>
-          </tr>
-        </tbody>
+        <thead><tr><th>N° inventaire</th><th>Désignation</th><th>المسمى</th><th>Matricule</th><th>État / الحالة</th><th>Actions</th></tr></thead>
+        <tbody id="equipmentRows"><tr><td colspan="6">Chargement... | جار التحميل...</td></tr></tbody>
       </table>
     </div>
   </section>
 
-  <!-- QR -->
   <section class="card" id="qrPanel">
     <h2>Code QR | رمز الاستجابة السريعة</h2>
-
     <p>Choisissez un matériel dans la liste pour créer son QR.</p>
-
     <div id="qrOutput"></div>
-
     <div class="actions" style="justify-content:center">
-      <button id="downloadQrBtn" class="primary hidden" type="button">
-        Télécharger PNG | تنزيل QR
-      </button>
-
-      <a id="openCardLink" class="hidden"
-        target="_blank" rel="noopener">
-        Ouvrir la fiche | فتح البطاقة
-      </a>
+      <button id="downloadQrBtn" class="primary hidden" type="button">Télécharger PNG | تنزيل QR</button>
+      <a id="openCardLink" class="hidden" target="_blank" rel="noopener">Ouvrir la fiche | فتح البطاقة</a>
     </div>
   </section>
-
 </section>
 </main>
 
-<!-- LIBRARIES -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
 <script>
 "use strict";
 
-/* =========================================
-   CONFIGURATION
-========================================= */
+/* CONFIGURATION */
+const SUPABASE_URL = "https://ubxvlawbotfkhegrtmgr.supabase.co";
+const SUPABASE_KEY = "sb_publishable_0Rqln8axonR6vGvlQwDDpQ_n7uLnoWT";
+const MANAGER_UID = "b10b63ed-e4bf-4b49-a670-c6cbc40bec39";
 
-const SUPABASE_URL =
-  "https://ubxvlawbotfkhegrtmgr.supabase.co";
+/* رابط البطاقة المنشور على Cloudflare */
+const CARD_BASE_URL = "https://sweet-darkness-ba6e.wassimlabiad17.workers.dev/";
 
-const SUPABASE_KEY =
-  "sb_publishable_0Rqln8axonR6vGvlQwDDpQ_n7uLnoWT";
-
-const MANAGER_UID =
-  "b10b63ed-e4bf-4b49-a670-c6cbc40bec39";
-
-/* رابط بطاقة العتاد الجديد */
-const CARD_BASE_URL =
-  "https://labiad-mateial.wassimlabiad17.workers.dev/";
-
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const $ = id => document.getElementById(id);
 
 let currentRecords = [];
 let departments = [];
-let currentQrUrl = "";
 let excelRecords = [];
-
-
-/* =========================================
-   GENERAL FUNCTIONS
-========================================= */
+let currentQrUrl = "";
 
 function showMessage(id, message, success=false) {
   const el = $(id);
@@ -342,1308 +289,560 @@ function showMessage(id, message, success=false) {
   el.className = "message " + (success ? "success" : "error");
   el.style.display = "block";
 }
-
-function clearMessage(id) {
-  $(id).style.display = "none";
-}
-
+function clearMessage(id) { $(id).style.display = "none"; }
+function normalizeText(value) { return String(value ?? "").trim().toLocaleLowerCase(); }
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
   })[c]);
 }
-
-function normalizeText(value) {
-  return String(value ?? "").trim().toLocaleLowerCase();
-}
-
-function setBusy(button, busy, busyText) {
+function setBusy(button, busy, busyText="Veuillez patienter...") {
   if (busy) {
-    button.dataset.oldText = button.textContent;
+    if (!button.dataset.oldText) button.dataset.oldText = button.textContent;
     button.textContent = busyText;
     button.disabled = true;
   } else {
     button.textContent = button.dataset.oldText || button.textContent;
     button.disabled = false;
+    delete button.dataset.oldText;
   }
 }
-
-
-/* =========================================
-   AUTHENTICATION
-========================================= */
+function value(id) { return $(id).value.trim(); }
+function nullable(id) { return value(id) || null; }
 
 async function requireManager() {
-
-  const { data, error } = await db.auth.getSession();
-
+  const {data, error} = await db.auth.getSession();
   const user = data?.session?.user;
-
   if (error || !user) {
     $("loginPanel").style.display = "block";
     $("appPanel").style.display = "none";
     return false;
   }
-
   if (user.id !== MANAGER_UID) {
-
     await db.auth.signOut();
-
-    showMessage(
-      "loginMessage",
-      "Accès refusé : compte non autorisé. | الدخول مرفوض."
-    );
-
+    showMessage("loginMessage", "Accès refusé : compte non autorisé. | الدخول مرفوض.");
     $("loginPanel").style.display = "block";
     $("appPanel").style.display = "none";
-
     return false;
   }
-
   $("loginPanel").style.display = "none";
   $("appPanel").style.display = "block";
-
   clearMessage("loginMessage");
-
   return true;
 }
 
-
-/* =========================================
-   DEPARTMENTS
-========================================= */
-
 async function loadDepartments() {
-
-  const { data, error } = await db
-    .from("departments")
-    .select("id,name_fr,name_ar")
-    .order("name_fr");
-
+  const {data, error} = await db.from("departments").select("id,name_fr,name_ar").order("name_fr");
   if (error) throw error;
-
   departments = data || [];
-
   $("department").innerHTML =
     '<option value="">-- Non spécifié | غير محدد --</option>' +
-
-    departments.map(d => `
-      <option value="${escapeHtml(d.id)}">
-        ${escapeHtml(d.name_fr)} / ${escapeHtml(d.name_ar)}
-      </option>
-    `).join("");
+    departments.map(d => `<option value="${escapeHtml(d.id)}">${escapeHtml(d.name_fr)} / ${escapeHtml(d.name_ar)}</option>`).join("");
 }
 
-
-/* =========================================
-   EQUIPMENT LIST
-========================================= */
-
 async function loadEquipment() {
-
   clearMessage("appMessage");
-
-  $("equipmentRows").innerHTML =
-    '<tr><td colspan="5">Chargement... | جار التحميل...</td></tr>';
-
-  const { data, error } = await db
+  $("equipmentRows").innerHTML = '<tr><td colspan="6">Chargement... | جار التحميل...</td></tr>';
+  const {data, error} = await db
     .from("materiels")
-    .select("id,public_id,inventory_number,designation_fr,designation_ar,status")
+    .select("id,public_id,inventory_number,designation_fr,designation_ar,registration_number,status")
     .order("inventory_number");
-
   if (error) {
-
     $("equipmentRows").innerHTML = "";
-
-    showMessage(
-      "appMessage",
-      "Erreur de chargement : " + error.message
-    );
-
+    showMessage("appMessage", "Erreur de chargement : " + error.message);
     return;
   }
-
   currentRecords = data || [];
-
   renderEquipment();
 }
 
 function renderEquipment() {
-
   const term = normalizeText($("searchBox").value);
-
   const records = currentRecords.filter(r =>
-    [
-      r.inventory_number,
-      r.designation_fr,
-      r.designation_ar
-    ].some(v => normalizeText(v).includes(term))
+    [r.inventory_number, r.designation_fr, r.designation_ar, r.registration_number]
+      .some(v => normalizeText(v).includes(term))
   );
-
   if (!records.length) {
-
-    $("equipmentRows").innerHTML =
-      '<tr><td colspan="5">Aucun matériel trouvé | لا يوجد عتاد</td></tr>';
-
+    $("equipmentRows").innerHTML = '<tr><td colspan="6">Aucun matériel trouvé | لا يوجد عتاد</td></tr>';
     return;
   }
-
   $("equipmentRows").innerHTML = records.map(r => `
     <tr>
       <td>${escapeHtml(r.inventory_number)}</td>
       <td>${escapeHtml(r.designation_fr)}</td>
       <td dir="rtl">${escapeHtml(r.designation_ar)}</td>
+      <td>${escapeHtml(r.registration_number || "")}</td>
       <td>${escapeHtml(r.status)}</td>
-      <td>
-        <div class="actions">
-
-          <button class="secondary"
-            data-action="edit"
-            data-id="${escapeHtml(r.id)}">
-            Modifier
-          </button>
-
-          <button class="primary"
-            data-action="qr"
-            data-id="${escapeHtml(r.id)}">
-            QR
-          </button>
-
-          <button class="danger"
-            data-action="delete"
-            data-id="${escapeHtml(r.id)}">
-            Supprimer
-          </button>
-
-        </div>
-      </td>
-    </tr>
-  `).join("");
+      <td><div class="actions">
+        <button class="secondary" data-action="edit" data-id="${escapeHtml(r.id)}">Modifier</button>
+        <button class="primary" data-action="qr" data-id="${escapeHtml(r.id)}">QR</button>
+        <button class="danger" data-action="delete" data-id="${escapeHtml(r.id)}">Supprimer</button>
+      </div></td>
+    </tr>`).join("");
 }
 
-
-/* =========================================
-   PHOTO UPLOAD
-========================================= */
-
 async function uploadEquipmentPhoto(materielId) {
-
   const file = $("equipmentPhoto").files[0];
-
   if (!file) return;
-
-  const allowed = [
-    "image/jpeg",
-    "image/png",
-    "image/webp"
-  ];
-
-  if (!allowed.includes(file.type)) {
-    throw new Error("Format d'image non accepté. JPG, PNG ou WEBP.");
-  }
-
-  if (file.size > 5 * 1024 * 1024) {
-    throw new Error("Image trop volumineuse. Maximum : 5 Mo.");
-  }
-
+  const allowed = ["image/jpeg","image/png","image/webp"];
+  if (!allowed.includes(file.type)) throw new Error("Format d'image non accepté. JPG, PNG ou WEBP.");
+  if (file.size > 5 * 1024 * 1024) throw new Error("Image trop volumineuse. Maximum : 5 Mo.");
   const extension = file.name.split(".").pop().toLowerCase();
-
-  const filePath =
-    `${materielId}/${crypto.randomUUID()}.${extension}`;
-
-  const { error: uploadError } = await db.storage
-    .from("materiel-photos")
-    .upload(filePath, file, {
-      contentType: file.type,
-      upsert: false
-    });
-
+  const filePath = `${materielId}/${crypto.randomUUID()}.${extension}`;
+  const {error: uploadError} = await db.storage.from("materiel-photos").upload(filePath, file, {
+    contentType:file.type, upsert:false
+  });
   if (uploadError) throw uploadError;
-
-  const { error: updateError } = await db
-    .from("materiel_photos")
-    .update({ is_primary: false })
-    .eq("materiel_id", materielId);
-
-  if (updateError) throw updateError;
-
-  const { error: insertError } = await db
-    .from("materiel_photos")
-    .insert({
-      materiel_id: materielId,
-      storage_path: filePath,
-      is_primary: true
-    });
-
+  const {error: clearError} = await db.from("materiel_photos")
+    .update({is_primary:false}).eq("materiel_id", materielId);
+  if (clearError) throw clearError;
+  const {error: insertError} = await db.from("materiel_photos").insert({
+    materiel_id:materielId, storage_path:filePath, is_primary:true
+  });
   if (insertError) throw insertError;
 }
 
-
-/* =========================================
-   EXCEL DATE CONVERSION
-========================================= */
-
-function excelDateToISO(value) {
-
-  if (!value) return null;
-
-  if (value instanceof Date && !isNaN(value)) {
-    return value.toISOString().slice(0,10);
-  }
-
-  const text = String(value).trim();
-
-  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
-    return text;
-  }
-
-  const match = text.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
-
-  if (match) {
-    const day = match[1].padStart(2,"0");
-    const month = match[2].padStart(2,"0");
-    return `${match[3]}-${month}-${day}`;
-  }
-
-  throw new Error("Date Excel invalide : " + text);
-}
-
-
-/* =========================================
-   EXCEL PREVIEW
-========================================= */
-
-
-/* =========================================
-   EXCEL PREVIEW - IMPROVED
-========================================= */
-
-$("previewExcelBtn").addEventListener("click", async () => {
-
-  const file = $("excelFile").files[0];
-
-  excelRecords = [];
-
-  $("importExcelBtn").disabled = true;
-  $("excelPreview").innerHTML = "";
-  clearMessage("excelMessage");
-
-  if (!file) {
-    showMessage(
-      "excelMessage",
-      "Veuillez choisir un fichier Excel. | يرجى اختيار ملف Excel."
-    );
-    return;
-  }
-
-  const extension = file.name.split(".").pop().toLowerCase();
-
-  if (!["xlsx", "xls"].includes(extension)) {
-    showMessage(
-      "excelMessage",
-      "Format invalide. Choisissez XLSX ou XLS. | اختر ملف Excel صحيحاً."
-    );
-    return;
-  }
-
-  const button = $("previewExcelBtn");
-  setBusy(button, true, "Lecture...");
-
-  try {
-
-    if (typeof XLSX === "undefined") {
-      throw new Error("Bibliothèque Excel non chargée. Vérifiez Internet.");
-    }
-
-    // قراءة الملف باستعمال FileReader
-    const buffer = await new Promise((resolve, reject) => {
-
-      const reader = new FileReader();
-
-      reader.onload = () => resolve(reader.result);
-
-      reader.onerror = () => reject(
-        new Error("Impossible de lire le fichier. Fermez Excel et réessayez.")
-      );
-
-      reader.onabort = () => reject(
-        new Error("Lecture du fichier annulée.")
-      );
-
-      reader.readAsArrayBuffer(file);
-
-    });
-
-    // قراءة ملف Excel
-    const workbook = XLSX.read(buffer, {
-      type: "array",
-      cellDates: true
-    });
-
-    if (!workbook.SheetNames.length) {
-      throw new Error("Le fichier ne contient aucune feuille.");
-    }
-
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-
-    const rows = XLSX.utils.sheet_to_json(sheet, {
-      defval: "",
-      raw: true
-    });
-
-    if (!rows.length) {
-      throw new Error("الملف فارغ أو لا يحتوي على بيانات.");
-    }
-
-    // التحقق من الأعمدة الإجبارية
-    const required = [
-      "inventory_number",
-      "designation_fr",
-      "designation_ar"
-    ];
-
-    const missing = required.filter(h => !(h in rows[0]));
-
-    if (missing.length) {
-      throw new Error(
-        "أعمدة إجبارية غير موجودة: " + missing.join(", ")
-      );
-    }
-
-    // تجهيز البيانات
-    excelRecords = rows.map(row => {
-
-      const price =
-        row.purchase_price === "" || row.purchase_price == null
-          ? null
-          : Number(row.purchase_price);
-
-      return {
-
-        inventory_number: String(row.inventory_number ?? "").trim(),
-
-        designation_fr: String(row.designation_fr ?? "").trim(),
-
-        designation_ar: String(row.designation_ar ?? "").trim(),
-
-        category_fr: String(row.category_fr ?? "").trim() || null,
-
-        category_ar: String(row.category_ar ?? "").trim() || null,
-
-        department_fr: String(
-          row.department_fr || row.department || ""
-        ).trim(),
-
-        department_ar: String(
-          row.department_ar || row.department || ""
-        ).trim(),
-
-        brand: String(row.brand ?? "").trim() || null,
-
-        model: String(row.model ?? "").trim() || null,
-
-        serial_number: String(row.serial_number ?? "").trim() || null,
-
-        acquisition_date: excelDateToISO(row.acquisition_date),
-
-        purchase_price: price,
-
-        status: String(row.status || "in_service").trim(),
-
-        location: String(row.location ?? "").trim() || null,
-
-        description_fr: String(row.description_fr ?? "").trim() || null,
-
-        description_ar: String(row.description_ar ?? "").trim() || null
-
-      };
-
-    });
-
-    // التحقق من صحة البيانات
-    const allowedStatuses = [
-      "in_service",
-      "maintenance",
-      "out_of_service",
-      "retired"
-    ];
-
-    const invalid = excelRecords.filter(r =>
-      !r.inventory_number ||
-      !r.designation_fr ||
-      !r.designation_ar ||
-      (
-        r.purchase_price !== null &&
-        (!Number.isFinite(r.purchase_price) || r.purchase_price < 0)
-      ) ||
-      !allowedStatuses.includes(r.status)
-    );
-
-    if (invalid.length) {
-      excelRecords = [];
-
-      throw new Error(
-        "توجد بيانات ناقصة أو أسعار أو حالات غير صحيحة. راجع الملف."
-      );
-    }
-
-    // كشف أرقام الجرد المكررة
-    const numbers = excelRecords.map(r => r.inventory_number);
-
-    const duplicateRows = numbers.filter(
-      (v, i, a) => a.indexOf(v) !== i
-    );
-
-    if (duplicateRows.length) {
-      excelRecords = [];
-
-      throw new Error(
-        "رقم الجرد مكرر داخل الملف: " +
-        [...new Set(duplicateRows)].join(", ")
-      );
-    }
-
-    // استخراج جميع الأعمدة التي تحتوي على بيانات
-    const columns = Object.keys(excelRecords[0]).filter(key =>
-      excelRecords.some(r =>
-        r[key] !== null &&
-        r[key] !== undefined &&
-        String(r[key]).trim() !== ""
-      )
-    );
-
-    // إنشاء جدول المعاينة تلقائياً
-    const table = document.createElement("table");
-
-    const thead = document.createElement("thead");
-    const headerRow = document.createElement("tr");
-
-    columns.forEach(key => {
-      const th = document.createElement("th");
-      th.textContent = key;
-      headerRow.appendChild(th);
-    });
-
-    thead.appendChild(headerRow);
-
-    const tbody = document.createElement("tbody");
-
-    excelRecords.forEach(record => {
-
-      const tr = document.createElement("tr");
-
-      columns.forEach(key => {
-
-        const td = document.createElement("td");
-        td.textContent = record[key] ?? "";
-
-        tr.appendChild(td);
-
-      });
-
-      tbody.appendChild(tr);
-
-    });
-
-    table.append(thead, tbody);
-
-    $("excelPreview").replaceChildren();
-
-    const summary = document.createElement("p");
-    summary.innerHTML =
-      "<strong>" + excelRecords.length +
-      "</strong> matériel(s) détecté(s) | عتاد تم العثور عليه";
-
-    $("excelPreview").append(summary, table);
-
-    $("importExcelBtn").disabled = false;
-
-    showMessage(
-      "excelMessage",
-      "Aperçu chargé avec succès. Vérifiez toutes les colonnes avant importation. | تمت المعاينة بنجاح. راجع جميع الأعمدة قبل الاستيراد.",
-      true
-    );
-
-  } catch (error) {
-
-    excelRecords = [];
-
-    $("importExcelBtn").disabled = true;
-
-    showMessage(
-      "excelMessage",
-      "Erreur : " + (error.message || "Impossible de lire le fichier.")
-    );
-
-  } finally {
-
-    setBusy(button, false);
-
-  }
-
-});
-
-
-
-/* =========================================
-   EXCEL IMPORT
-========================================= */
-
-$("importExcelBtn").addEventListener("click", async () => {
-
-  if (!excelRecords.length) return;
-
-  if (!confirm(
-    `Importer ${excelRecords.length} matériel(s) dans Supabase ?\nهل تريد استيراد المعدات إلى قاعدة البيانات؟`
-  )) return;
-
-  const button = $("importExcelBtn");
-
-  setBusy(button, true, "Importation...");
-
-  try {
-
-    const { data: existing, error: existingError } = await db
-      .from("materiels")
-      .select("inventory_number");
-
-    if (existingError) throw existingError;
-
-    const existingNumbers = new Set(
-      (existing || []).map(r => normalizeText(r.inventory_number))
-    );
-
-    const imported = [];
-    const skipped = [];
-
-    for (const r of excelRecords) {
-
-      if (existingNumbers.has(normalizeText(r.inventory_number))) {
-        skipped.push(r.inventory_number + " (رقم الجرد موجود مسبقاً)");
-        continue;
-      }
-
-      let departmentId = null;
-
-      const depFr = r.department_fr;
-      const depAr = r.department_ar;
-
-      if (depFr || depAr) {
-
-        let found = departments.find(d =>
-          (depFr && normalizeText(d.name_fr) === normalizeText(depFr)) ||
-          (depAr && normalizeText(d.name_ar) === normalizeText(depAr))
-        );
-
-        if (!found) {
-
-          const { data: newDepartment, error: departmentError } =
-            await db
-              .from("departments")
-              .insert({
-                name_fr: depFr || depAr,
-                name_ar: depAr || depFr
-              })
-              .select()
-              .single();
-
-          if (departmentError) {
-            skipped.push(
-              r.inventory_number +
-              " (تعذر إنشاء المصلحة: " +
-              departmentError.message + ")"
-            );
-            continue;
-          }
-
-          found = newDepartment;
-          departments.push(newDepartment);
-        }
-
-        departmentId = found.id;
-      }
-
-      const payload = {
-        inventory_number: r.inventory_number,
-        designation_fr: r.designation_fr,
-        designation_ar: r.designation_ar,
-        category_fr: r.category_fr,
-        category_ar: r.category_ar,
-        department_id: departmentId,
-        brand: r.brand,
-        model: r.model,
-        serial_number: r.serial_number,
-        acquisition_date: r.acquisition_date,
-        purchase_price: r.purchase_price,
-        currency_code: "DZD",
-        status: r.status,
-        location: r.location,
-        description_fr: r.description_fr,
-        description_ar: r.description_ar,
-        updated_at: new Date().toISOString()
-      };
-
-      const { error } = await db
-        .from("materiels")
-        .insert(payload);
-
-      if (error) {
-        skipped.push(
-          r.inventory_number + " (" + error.message + ")"
-        );
-      } else {
-        imported.push(r.inventory_number);
-        existingNumbers.add(normalizeText(r.inventory_number));
-      }
-    }
-
-    await loadDepartments();
-    await loadEquipment();
-
-    excelRecords = [];
-
-    $("excelFile").value = "";
-    $("excelPreview").innerHTML = "";
-
-    showMessage(
-      "excelMessage",
-      `تم استيراد ${imported.length} عتاد بنجاح.\n` +
-      `تم تجاوز ${skipped.length} سجل.\n` +
-      (skipped.length
-        ? "السجلات التي لم تستورد:\n" + skipped.join("\n")
-        : ""),
-      imported.length > 0
-    );
-
-  } catch (error) {
-
-    showMessage(
-      "excelMessage",
-      "Erreur d'importation : " + error.message
-    );
-
-  } finally {
-    setBusy(button, false);
-  }
-
-});
-
-
-/* =========================================
-   FORM DATA
-========================================= */
-
 function formData() {
-
-  const price = $("price").value;
-
+  const priceText = value("purchasePrice");
+  const yearText = value("commissioningYear");
   return {
-
-    inventory_number: $("inventory").value.trim(),
-
-    designation_fr: $("designationFr").value.trim(),
-
-    designation_ar: $("designationAr").value.trim(),
-
-    category_fr: $("categoryFr").value.trim() || null,
-
-    category_ar: $("categoryAr").value.trim() || null,
-
-    department_id: $("department").value || null,
-
-    brand: $("brand").value.trim() || null,
-
-    model: $("model").value.trim() || null,
-
-    serial_number: $("serial").value.trim() || null,
-
-    acquisition_date: $("acquisitionDate").value || null,
-
-    purchase_price: price === "" ? null : Number(price),
-
-    currency_code: "DZD",
-
-    status: $("status").value,
-
-    location: $("location").value.trim() || null,
-
-    description_fr: $("descriptionFr").value.trim() || null,
-
-    description_ar: $("descriptionAr").value.trim() || null,
-
+    inventory_number: value("inventory"),
+    designation_fr: value("designationFr"),
+    designation_ar: value("designationAr"),
+    category_fr: nullable("categoryFr"),
+    category_ar: nullable("categoryAr"),
+    brand: nullable("brand"),
+    model: nullable("model"),
+    serial_number: nullable("serialNumber"),
+    registration_number: nullable("registrationNumber"),
+    chassis_number: nullable("chassisNumber"),
+    engine_number: nullable("engineNumber"),
+    acquisition_date: nullable("acquisitionDate"),
+    purchase_price: priceText === "" ? null : Number(priceText),
+    currency_code: value("currencyCode") || "DZD",
+    commissioning_year: yearText === "" ? null : Number(yearText),
+    fuel_type: nullable("fuelType"),
+    engine_capacity: nullable("engineCapacity"),
+    tank_capacity: nullable("tankCapacity"),
+    volume: nullable("volume"),
+    department_id: nullable("department"),
+    status: value("status"),
+    location: nullable("location"),
+    description_fr: nullable("descriptionFr"),
+    description_ar: nullable("descriptionAr"),
+    observations_fr: nullable("observationsFr"),
+    observations_ar: nullable("observationsAr"),
     updated_at: new Date().toISOString()
-
   };
 }
 
-
-/* =========================================
-   RESET FORM
-========================================= */
-
 function resetForm() {
-
   $("equipmentForm").reset();
-
   $("recordId").value = "";
-
-  $("formTitle").textContent =
-    "Ajouter un matériel | إضافة عتاد";
-
+  $("formTitle").textContent = "Ajouter un matériel | إضافة عتاد";
   $("status").value = "in_service";
-
+  $("currencyCode").value = "DZD";
   $("equipmentPhoto").value = "";
-
   $("photoPreview").src = "";
-
   $("photoPreview").classList.add("hidden");
 }
 
-
-/* =========================================
-   SAVE EQUIPMENT
-========================================= */
-
 async function saveEquipment(event) {
-
   event.preventDefault();
-
   clearMessage("appMessage");
-
   const id = $("recordId").value;
-
   const payload = formData();
 
-  if (
-    !payload.inventory_number ||
-    !payload.designation_fr ||
-    !payload.designation_ar
-  ) {
-    showMessage(
-      "appMessage",
-      "Veuillez remplir les champs obligatoires. | يرجى ملء الحقول الإجبارية."
-    );
+  if (!payload.inventory_number || !payload.designation_fr || !payload.designation_ar) {
+    showMessage("appMessage", "Veuillez remplir les champs obligatoires. | يرجى ملء الحقول الإجبارية.");
+    return;
+  }
+  if (payload.purchase_price !== null && (!Number.isFinite(payload.purchase_price) || payload.purchase_price < 0)) {
+    showMessage("appMessage", "Prix d'achat invalide. | سعر الشراء غير صحيح.");
+    return;
+  }
+  if (payload.commissioning_year !== null &&
+      (!Number.isInteger(payload.commissioning_year) || payload.commissioning_year < 1900 || payload.commissioning_year > 2100)) {
+    showMessage("appMessage", "Année de mise en service invalide. | سنة وضع الخدمة غير صحيحة.");
     return;
   }
 
-  if (
-    payload.purchase_price !== null &&
-    (!Number.isFinite(payload.purchase_price) || payload.purchase_price < 0)
-  ) {
-    showMessage("appMessage", "Prix d'achat invalide.");
-    return;
-  }
-
-  const submitButton =
-    $("equipmentForm").querySelector('button[type="submit"]');
-
+  const submitButton = $("equipmentForm").querySelector('button[type="submit"]');
   setBusy(submitButton, true, "Enregistrement...");
-
   try {
-
     let result;
-
     if (id) {
-
-      result = await db
-        .from("materiels")
-        .update(payload)
-        .eq("id", id)
-        .select()
-        .single();
-
+      result = await db.from("materiels").update(payload).eq("id", id).select().single();
     } else {
-
-      result = await db
-        .from("materiels")
-        .insert(payload)
-        .select()
-        .single();
-
+      result = await db.from("materiels").insert(payload).select().single();
     }
-
     if (result.error) throw result.error;
-
-    if ($("equipmentPhoto").files.length > 0) {
-      await uploadEquipmentPhoto(result.data.id);
-    }
-
-    showMessage(
-      "appMessage",
-      id
-        ? "Matériel modifié avec succès. | تم تعديل العتاد."
-        : "Matériel ajouté avec succès. | تمت إضافة العتاد.",
-      true
-    );
-
+    if ($("equipmentPhoto").files.length) await uploadEquipmentPhoto(result.data.id);
+    showMessage("appMessage",
+      id ? "Matériel modifié avec succès. | تم تعديل العتاد." : "Matériel ajouté avec succès. | تمت إضافة العتاد.", true);
     resetForm();
-
     await loadEquipment();
-
     await createQr(result.data);
-
   } catch (error) {
-
-    showMessage(
-      "appMessage",
-      "Erreur : " + (error.message || "Opération impossible")
-    );
-
+    showMessage("appMessage", "Erreur : " + (error.message || "Opération impossible"));
   } finally {
     setBusy(submitButton, false);
   }
 }
 
-
-/* =========================================
-   EDIT EQUIPMENT
-========================================= */
-
 async function editEquipment(id) {
-
   clearMessage("appMessage");
+  const {data, error} = await db.from("materiels").select("*").eq("id", id).single();
+  if (error) { showMessage("appMessage", "Erreur : " + error.message); return; }
 
-  const { data, error } = await db
-    .from("materiels")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error) {
-    showMessage("appMessage", "Erreur : " + error.message);
-    return;
-  }
-
-  $("recordId").value = data.id;
-
+  $("recordId").value = data.id || "";
   $("inventory").value = data.inventory_number || "";
-
   $("designationFr").value = data.designation_fr || "";
-
   $("designationAr").value = data.designation_ar || "";
-
   $("categoryFr").value = data.category_fr || "";
-
   $("categoryAr").value = data.category_ar || "";
-
-  $("department").value = data.department_id || "";
-
   $("brand").value = data.brand || "";
-
   $("model").value = data.model || "";
-
-  $("serial").value = data.serial_number || "";
-
+  $("serialNumber").value = data.serial_number || "";
+  $("registrationNumber").value = data.registration_number || "";
+  $("chassisNumber").value = data.chassis_number || "";
+  $("engineNumber").value = data.engine_number || "";
+  $("purchasePrice").value = data.purchase_price ?? "";
+  $("currencyCode").value = data.currency_code || "DZD";
   $("acquisitionDate").value = data.acquisition_date || "";
-
-  $("price").value = data.purchase_price ?? "";
-
+  $("commissioningYear").value = data.commissioning_year ?? "";
+  $("volume").value = data.volume || "";
+  $("fuelType").value = data.fuel_type || "";
+  $("engineCapacity").value = data.engine_capacity || "";
+  $("tankCapacity").value = data.tank_capacity || "";
+  $("department").value = data.department_id || "";
   $("status").value = data.status || "in_service";
-
   $("location").value = data.location || "";
-
   $("descriptionFr").value = data.description_fr || "";
-
   $("descriptionAr").value = data.description_ar || "";
-
+  $("observationsFr").value = data.observations_fr || "";
+  $("observationsAr").value = data.observations_ar || "";
   $("equipmentPhoto").value = "";
-
   $("photoPreview").src = "";
-
   $("photoPreview").classList.add("hidden");
-
-  $("formTitle").textContent =
-    "Modifier le matériel | تعديل العتاد";
-
-  $("equipmentForm").scrollIntoView({
-    behavior: "smooth"
-  });
+  $("formTitle").textContent = "Modifier le matériel | تعديل العتاد";
+  $("equipmentForm").scrollIntoView({behavior:"smooth"});
 }
 
-
-/* =========================================
-   DELETE EQUIPMENT
-========================================= */
-
 async function deleteEquipment(id) {
-
   const record = currentRecords.find(r => r.id === id);
-
   if (!record) return;
-
-  if (!confirm(
-    `Supprimer ${record.inventory_number} ?\nهل تريد حذف هذا العتاد؟`
-  )) return;
-
-  const { error } = await db
-    .from("materiels")
-    .delete()
-    .eq("id", id);
-
+  if (!confirm(`Supprimer ${record.inventory_number} ?\nهل تريد حذف هذا العتاد؟`)) return;
+  const {error} = await db.from("materiels").delete().eq("id", id);
   if (error) {
-
-    showMessage(
-      "appMessage",
-      "Erreur de suppression : " + error.message
-    );
-
+    showMessage("appMessage", "Erreur de suppression : " + error.message);
     return;
   }
-
-  showMessage(
-    "appMessage",
-    "Matériel supprimé. | تم حذف العتاد.",
-    true
-  );
-
+  showMessage("appMessage", "Matériel supprimé. | تم حذف العتاد.", true);
   $("qrOutput").innerHTML = "";
-
   $("downloadQrBtn").classList.add("hidden");
-
   $("openCardLink").classList.add("hidden");
-
   currentQrUrl = "";
-
   await loadEquipment();
 }
 
-
-/* =========================================
-   QR GENERATION
-========================================= */
-
 async function createQr(record) {
-
-  const publicId = record.public_id;
-
-  if (!publicId) {
-
-    showMessage(
-      "appMessage",
-      "Le public_id est manquant pour cet équipement. | معرّف البطاقة غير موجود."
-    );
-
+  if (!record.public_id) {
+    showMessage("appMessage", "Le public_id est manquant pour cet équipement. | معرّف البطاقة غير موجود.");
     return;
   }
-
-  currentQrUrl =
-    CARD_BASE_URL +
-    "?public_id=" +
-    encodeURIComponent(publicId);
-
+  currentQrUrl = CARD_BASE_URL + "?public_id=" + encodeURIComponent(record.public_id);
   $("qrOutput").innerHTML = "";
-
   if (typeof QRCode === "undefined") {
-    showMessage(
-      "appMessage",
-      "La bibliothèque QRCode n'a pas été chargée. Vérifiez Internet."
-    );
+    showMessage("appMessage", "La bibliothèque QRCode n'a pas été chargée. Vérifiez Internet.");
     return;
   }
-
   new QRCode($("qrOutput"), {
-    text: currentQrUrl,
-    width: 260,
-    height: 260,
-    correctLevel: QRCode.CorrectLevel.H
+    text:currentQrUrl, width:260, height:260, correctLevel:QRCode.CorrectLevel.H
   });
-
   $("downloadQrBtn").classList.remove("hidden");
-
   $("openCardLink").classList.remove("hidden");
-
   $("openCardLink").href = currentQrUrl;
-
-  $("openCardLink").textContent =
-    "Ouvrir la fiche | فتح البطاقة";
-
-  $("openCardLink").style.display = "inline-block";
-
-  $("openCardLink").style.margin = "12px";
-
-  $("qrPanel").scrollIntoView({
-    behavior: "smooth"
-  });
+  $("qrPanel").scrollIntoView({behavior:"smooth"});
 }
 
-
-/* =========================================
-   DOWNLOAD QR
-========================================= */
-
 function downloadQr() {
-
   const canvas = $("qrOutput").querySelector("canvas");
-
   const img = $("qrOutput").querySelector("img");
-
-  let source = "";
-
-  if (canvas) {
-    source = canvas.toDataURL("image/png");
-  } else if (img && img.src) {
-    source = img.src;
-  }
-
-  if (!source) {
-    alert("Le QR n'est pas prêt. | رمز QR غير جاهز.");
-    return;
-  }
-
+  const source = canvas ? canvas.toDataURL("image/png") : (img?.src || "");
+  if (!source) { alert("Le QR n'est pas prêt. | رمز QR غير جاهز."); return; }
   const a = document.createElement("a");
-
   a.href = source;
-
   a.download = "QR-materiel.png";
-
   document.body.appendChild(a);
-
   a.click();
-
   a.remove();
 }
 
-
-/* =========================================
-   EVENT LISTENERS
-========================================= */
-
-$("loginForm").addEventListener("submit", async event => {
-
-  event.preventDefault();
-
-  clearMessage("loginMessage");
-
-  const { error } = await db.auth.signInWithPassword({
-
-    email: $("email").value.trim(),
-
-    password: $("password").value
-
-  });
-
-  if (error) {
-
-    showMessage(
-      "loginMessage",
-      "Connexion impossible : " + error.message
-    );
-
-    return;
+/* Excel helpers */
+function excelDateToISO(value) {
+  if (value === "" || value == null) return null;
+  if (value instanceof Date && !isNaN(value)) return value.toISOString().slice(0,10);
+  if (typeof value === "number" && XLSX?.SSF) {
+    const parsed = XLSX.SSF.parse_date_code(value);
+    if (parsed) return `${parsed.y}-${String(parsed.m).padStart(2,"0")}-${String(parsed.d).padStart(2,"0")}`;
   }
+  const text = String(value).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  const match = text.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+  if (match) return `${match[3]}-${match[2].padStart(2,"0")}-${match[1].padStart(2,"0")}`;
+  throw new Error("Date Excel invalide : " + text);
+}
+function cellText(row, key) { return String(row[key] ?? "").trim(); }
 
-  if (await requireManager()) {
-
-    try {
-
-      await loadDepartments();
-
-      await loadEquipment();
-
-    } catch (e) {
-
-      showMessage("appMessage", "Erreur : " + e.message);
-
-    }
-
+$("previewExcelBtn").addEventListener("click", async () => {
+  const file = $("excelFile").files[0];
+  excelRecords = [];
+  $("importExcelBtn").disabled = true;
+  $("excelPreview").innerHTML = "";
+  clearMessage("excelMessage");
+  if (!file) { showMessage("excelMessage", "Veuillez choisir un fichier Excel. | يرجى اختيار ملف Excel."); return; }
+  if (!["xlsx","xls"].includes(file.name.split(".").pop().toLowerCase())) {
+    showMessage("excelMessage", "Format invalide. Choisissez XLSX ou XLS."); return;
   }
-
-});
-
-
-$("logoutBtn").addEventListener("click", async () => {
-
-  await db.auth.signOut();
-
-  $("appPanel").style.display = "none";
-
-  $("loginPanel").style.display = "block";
-
-  resetForm();
-
-});
-
-
-$("equipmentForm").addEventListener(
-  "submit",
-  saveEquipment
-);
-
-
-$("resetBtn").addEventListener(
-  "click",
-  resetForm
-);
-
-
-$("refreshBtn").addEventListener(
-  "click",
-  loadEquipment
-);
-
-
-$("searchBox").addEventListener(
-  "input",
-  renderEquipment
-);
-
-
-$("downloadQrBtn").addEventListener(
-  "click",
-  downloadQr
-);
-
-
-/* =========================================
-   PHOTO PREVIEW
-========================================= */
-
-$("equipmentPhoto").addEventListener("change", function() {
-
-  const file = this.files[0];
-
-  const preview = $("photoPreview");
-
-  if (!file) {
-
-    preview.src = "";
-
-    preview.classList.add("hidden");
-
-    return;
-  }
-
-  const allowed = [
-    "image/jpeg",
-    "image/png",
-    "image/webp"
-  ];
-
-  if (!allowed.includes(file.type)) {
-
-    alert("Veuillez sélectionner une image JPG, PNG ou WEBP.");
-
-    this.value = "";
-
-    preview.classList.add("hidden");
-
-    return;
-  }
-
-  if (file.size > 5 * 1024 * 1024) {
-
-    alert("Image trop volumineuse. Maximum : 5 Mo.");
-
-    this.value = "";
-
-    preview.classList.add("hidden");
-
-    return;
-  }
-
-  preview.src = URL.createObjectURL(file);
-
-  preview.classList.remove("hidden");
-
-});
-
-
-/* =========================================
-   EQUIPMENT TABLE ACTIONS
-========================================= */
-
-$("equipmentRows").addEventListener("click", async event => {
-
-  const button = event.target.closest("button[data-action]");
-
-  if (!button) return;
-
-  const id = button.dataset.id;
-
-  if (button.dataset.action === "edit") {
-    await editEquipment(id);
-  }
-
-  if (button.dataset.action === "delete") {
-    await deleteEquipment(id);
-  }
-
-  if (button.dataset.action === "qr") {
-
-    const record = currentRecords.find(r => r.id === id);
-
-    if (record) {
-      await createQr(record);
-    }
-
-  }
-
-});
-
-
-/* =========================================
-   AUTH STATE CHANGE
-========================================= */
-
-db.auth.onAuthStateChange((_event, session) => {
-
-  if (!session) return;
-
-  setTimeout(async () => {
-
-    if (await requireManager()) {
-
-      try {
-
-        await loadDepartments();
-
-        await loadEquipment();
-
-      } catch (e) {
-
-        showMessage("appMessage", "Erreur : " + e.message);
-
-      }
-
-    }
-
-  }, 0);
-
-});
-
-
-/* =========================================
-   INITIALIZATION
-========================================= */
-
-(async function init() {
-
+  const button = $("previewExcelBtn");
+  setBusy(button, true, "Lecture...");
   try {
+    if (typeof XLSX === "undefined") throw new Error("Bibliothèque Excel non chargée. Vérifiez Internet.");
+    const buffer = await file.arrayBuffer();
+    const workbook = XLSX.read(buffer, {type:"array", cellDates:true});
+    if (!workbook.SheetNames.length) throw new Error("Le fichier ne contient aucune feuille.");
+    const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {defval:"", raw:true});
+    if (!rows.length) throw new Error("الملف فارغ أو لا يحتوي على بيانات.");
+    const required = ["inventory_number","designation_fr","designation_ar"];
+    const missing = required.filter(k => !(k in rows[0]));
+    if (missing.length) throw new Error("أعمدة إجبارية غير موجودة: " + missing.join(", "));
 
-    if (await requireManager()) {
+    excelRecords = rows.map(row => {
+      const priceText = cellText(row, "purchase_price");
+      const yearText = cellText(row, "commissioning_year");
+      return {
+        inventory_number:cellText(row,"inventory_number"),
+        designation_fr:cellText(row,"designation_fr"),
+        designation_ar:cellText(row,"designation_ar"),
+        category_fr:cellText(row,"category_fr") || null,
+        category_ar:cellText(row,"category_ar") || null,
+        brand:cellText(row,"brand") || null,
+        model:cellText(row,"model") || null,
+        serial_number:cellText(row,"serial_number") || null,
+        registration_number:cellText(row,"registration_number") || null,
+        chassis_number:cellText(row,"chassis_number") || null,
+        engine_number:cellText(row,"engine_number") || null,
+        purchase_price:priceText === "" ? null : Number(priceText),
+        currency_code:cellText(row,"currency_code") || "DZD",
+        acquisition_date:excelDateToISO(row.acquisition_date),
+        commissioning_year:yearText === "" ? null : Number(yearText),
+        volume:cellText(row,"volume") || null,
+        fuel_type:cellText(row,"fuel_type") || null,
+        engine_capacity:cellText(row,"engine_capacity") || null,
+        tank_capacity:cellText(row,"tank_capacity") || null,
+        department_fr:cellText(row,"department_fr") || cellText(row,"department"),
+        department_ar:cellText(row,"department_ar") || cellText(row,"department"),
+        status:cellText(row,"status") || "in_service",
+        location:cellText(row,"location") || null,
+        description_fr:cellText(row,"description_fr") || null,
+        description_ar:cellText(row,"description_ar") || null,
+        observations_fr:cellText(row,"observations_fr") || null,
+        observations_ar:cellText(row,"observations_ar") || null
+      };
+    });
 
-      await loadDepartments();
-
-      await loadEquipment();
-
-    }
-
-  } catch (error) {
-
-    showMessage(
-      "appMessage",
-      "Erreur d'initialisation : " + error.message
+    const allowedStatuses = ["in_service","maintenance","out_of_service","retired"];
+    const invalid = excelRecords.filter(r =>
+      !r.inventory_number || !r.designation_fr || !r.designation_ar ||
+      (r.purchase_price !== null && (!Number.isFinite(r.purchase_price) || r.purchase_price < 0)) ||
+      (r.commissioning_year !== null && (!Number.isInteger(r.commissioning_year) || r.commissioning_year < 1900 || r.commissioning_year > 2100)) ||
+      !allowedStatuses.includes(r.status)
     );
+    if (invalid.length) throw new Error("توجد بيانات ناقصة أو سعر أو سنة أو حالة غير صحيحة. راجع الملف.");
 
+    const nums = excelRecords.map(r => normalizeText(r.inventory_number));
+    const duplicates = [...new Set(nums.filter((v,i,a) => a.indexOf(v) !== i))];
+    if (duplicates.length) throw new Error("أرقام جرد مكررة داخل الملف: " + duplicates.join(", "));
+
+    const columns = Object.keys(excelRecords[0]).filter(k => excelRecords.some(r => r[k] !== null && r[k] !== "" && r[k] !== undefined));
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const hr = document.createElement("tr");
+    columns.forEach(k => { const th=document.createElement("th"); th.textContent=k; hr.appendChild(th); });
+    thead.appendChild(hr);
+    const tbody = document.createElement("tbody");
+    excelRecords.forEach(r => {
+      const tr=document.createElement("tr");
+      columns.forEach(k => { const td=document.createElement("td"); td.textContent=r[k] ?? ""; tr.appendChild(td); });
+      tbody.appendChild(tr);
+    });
+    table.append(thead,tbody);
+    const summary=document.createElement("p");
+    summary.textContent=`${excelRecords.length} matériel(s) détecté(s) | ${excelRecords.length} سجل تم العثور عليه`;
+    $("excelPreview").replaceChildren(summary,table);
+    $("importExcelBtn").disabled = false;
+    showMessage("excelMessage", "Aperçu chargé. Vérifiez les données avant l'importation. | تمت المعاينة، راجع البيانات قبل الاستيراد.", true);
+  } catch (error) {
+    excelRecords=[];
+    showMessage("excelMessage", "Erreur : " + (error.message || "Impossible de lire le fichier."));
+  } finally {
+    setBusy(button,false);
   }
+});
 
+$("importExcelBtn").addEventListener("click", async () => {
+  if (!excelRecords.length) return;
+  if (!confirm(`Importer ${excelRecords.length} matériel(s) dans Supabase ?\nهل تريد استيراد البيانات؟`)) return;
+  const button=$("importExcelBtn");
+  setBusy(button,true,"Importation...");
+  try {
+    const {data:existing,error:existingError}=await db.from("materiels").select("inventory_number");
+    if (existingError) throw existingError;
+    const existingNumbers=new Set((existing||[]).map(r=>normalizeText(r.inventory_number)));
+    const imported=[], skipped=[];
+    for (const r of excelRecords) {
+      if (existingNumbers.has(normalizeText(r.inventory_number))) {
+        skipped.push(r.inventory_number+" (رقم الجرد موجود مسبقاً)");
+        continue;
+      }
+      let departmentId=null;
+      if (r.department_fr || r.department_ar) {
+        let found=departments.find(d =>
+          (r.department_fr && normalizeText(d.name_fr)===normalizeText(r.department_fr)) ||
+          (r.department_ar && normalizeText(d.name_ar)===normalizeText(r.department_ar))
+        );
+        if (!found) {
+          const {data:newDep,error:depError}=await db.from("departments").insert({
+            name_fr:r.department_fr || r.department_ar,
+            name_ar:r.department_ar || r.department_fr
+          }).select().single();
+          if (depError) { skipped.push(r.inventory_number+" (تعذر إنشاء المصلحة: "+depError.message+")"); continue; }
+          found=newDep;
+          departments.push(newDep);
+        }
+        departmentId=found.id;
+      }
+      const payload={
+        inventory_number:r.inventory_number,
+        designation_fr:r.designation_fr,
+        designation_ar:r.designation_ar,
+        category_fr:r.category_fr,
+        category_ar:r.category_ar,
+        brand:r.brand,
+        model:r.model,
+        serial_number:r.serial_number,
+        registration_number:r.registration_number,
+        chassis_number:r.chassis_number,
+        engine_number:r.engine_number,
+        acquisition_date:r.acquisition_date,
+        purchase_price:r.purchase_price,
+        currency_code:r.currency_code,
+        commissioning_year:r.commissioning_year,
+        volume:r.volume,
+        fuel_type:r.fuel_type,
+        engine_capacity:r.engine_capacity,
+        tank_capacity:r.tank_capacity,
+        department_id:departmentId,
+        status:r.status,
+        location:r.location,
+        description_fr:r.description_fr,
+        description_ar:r.description_ar,
+        observations_fr:r.observations_fr,
+        observations_ar:r.observations_ar,
+        updated_at:new Date().toISOString()
+      };
+      const {error}=await db.from("materiels").insert(payload);
+      if (error) skipped.push(r.inventory_number+" ("+error.message+")");
+      else { imported.push(r.inventory_number); existingNumbers.add(normalizeText(r.inventory_number)); }
+    }
+    await loadDepartments();
+    await loadEquipment();
+    excelRecords=[];
+    $("excelFile").value="";
+    $("excelPreview").innerHTML="";
+    showMessage("excelMessage",
+      `تم استيراد ${imported.length} سجل بنجاح.\nتم تجاوز ${skipped.length} سجل.\n`+
+      (skipped.length ? "السجلات التي لم تستورد:\n"+skipped.join("\n") : ""),
+      imported.length>0
+    );
+  } catch(error) {
+    showMessage("excelMessage","Erreur d'importation : "+error.message);
+  } finally {
+    setBusy(button,false);
+  }
+});
+
+/* Events */
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  clearMessage("loginMessage");
+  const {error}=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});
+  if (error) { showMessage("loginMessage","Connexion impossible : "+error.message); return; }
+  if (await requireManager()) {
+    try { await loadDepartments(); await loadEquipment(); }
+    catch(e) { showMessage("appMessage","Erreur : "+e.message); }
+  }
+});
+$("logoutBtn").addEventListener("click",async()=>{
+  await db.auth.signOut();
+  $("appPanel").style.display="none";
+  $("loginPanel").style.display="block";
+  resetForm();
+});
+$("equipmentForm").addEventListener("submit",saveEquipment);
+$("resetBtn").addEventListener("click",resetForm);
+$("refreshBtn").addEventListener("click",loadEquipment);
+$("searchBox").addEventListener("input",renderEquipment);
+$("downloadQrBtn").addEventListener("click",downloadQr);
+
+$("equipmentPhoto").addEventListener("change",function(){
+  const file=this.files[0], preview=$("photoPreview");
+  if (!file) { preview.src=""; preview.classList.add("hidden"); return; }
+  if (!["image/jpeg","image/png","image/webp"].includes(file.type)) {
+    alert("Veuillez sélectionner une image JPG, PNG ou WEBP.");
+    this.value=""; preview.classList.add("hidden"); return;
+  }
+  if (file.size>5*1024*1024) {
+    alert("Image trop volumineuse. Maximum : 5 Mo.");
+    this.value=""; preview.classList.add("hidden"); return;
+  }
+  preview.src=URL.createObjectURL(file);
+  preview.classList.remove("hidden");
+});
+
+$("equipmentRows").addEventListener("click",async event=>{
+  const button=event.target.closest("button[data-action]");
+  if (!button) return;
+  const id=button.dataset.id;
+  if (button.dataset.action==="edit") await editEquipment(id);
+  if (button.dataset.action==="delete") await deleteEquipment(id);
+  if (button.dataset.action==="qr") {
+    const record=currentRecords.find(r=>r.id===id);
+    if (record) await createQr(record);
+  }
+});
+
+db.auth.onAuthStateChange((_event,session)=>{
+  if (!session) return;
+  setTimeout(async()=>{
+    if (await requireManager()) {
+      try { await loadDepartments(); await loadEquipment(); }
+      catch(e) { showMessage("appMessage","Erreur : "+e.message); }
+    }
+  },0);
+});
+
+(async function init(){
+  try {
+    if (await requireManager()) {
+      await loadDepartments();
+      await loadEquipment();
+    }
+  } catch(error) {
+    showMessage("appMessage","Erreur d'initialisation : "+error.message);
+  }
 })();
-
 </script>
-
 </body>
 </html>
