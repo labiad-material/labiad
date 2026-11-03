@@ -442,40 +442,19 @@ function findValue(data, names) {
   return "";
 }
 
-
-/* ترجمة أسماء المواصفات */
+/* ترجمة أسماء بعض المواصفات */
 function translateLabel(key) {
   const labels = {
     code: "رقم الجرد | Numéro d'inventaire",
     code_materiel: "رقم العتاد | Code matériel",
-    inventory_number: "رقم الجرد | Numéro d'inventaire",
-
     brand: "العلامة التجارية | Marque",
     model: "الطراز | Modèle",
-
     category_fr: "الصنف | Catégorie",
-    category_ar: "الصنف | Catégorie",
-
     location: "الموقع | Emplacement",
     status: "الحالة | État",
-
     description_fr: "الوصف | Description",
-    description_ar: "الوصف | Description",
-
     department_fr: "المصلحة | Service",
-    department_ar: "المصلحة | Service",
-
-    designation_fr: "التسمية بالفرنسية | Désignation française",
-    designation_ar: "التسمية بالعربية | Désignation arabe",
-
-    serial_number: "الرقم التسلسلي | Numéro de série",
-
-    acquisition_date: "سنة الاستعمال | Année de mise en service",
-    purchase_price: "الترقيم | Matricule",
-    currency_code: "السعة | Volume",
-
-    created_at: "تاريخ التسجيل | Date de création",
-    updated_at: "تاريخ التحديث | Date de mise à jour"
+    designation_fr: "التسمية | Désignation"
   };
 
   return labels[key] || key.replaceAll("_", " ");
@@ -565,6 +544,13 @@ const excluded = new Set([
   "url_photo",
   "image_path"
 ]);
+  "image_url",
+  "photo_url",
+  "image",
+  "photo",
+  "url_photo",
+  "image_path"
+]);
   const specifications =
     document.getElementById("specifications");
 
@@ -586,9 +572,7 @@ const excluded = new Set([
 
     const label = document.createElement("div");
     label.className = "label";
-    const normalizedKey = key.trim().toLowerCase();
-
-label.textContent = translateLabel(normalizedKey);
+    label.textContent = translateLabel(key);
 
     const content = document.createElement("div");
     content.className = "spec-value";
@@ -660,18 +644,31 @@ async function loadEquipment() {
 }
 
 loadEquipment();
+</script>
 
-/* ترجمة أسماء المواصفات */
+</body>
+</html>
 function translateLabel(key) {
   const labels = {
-    acquisition_date: "سنة الاستعمال | Année de mise en service",
-    purchase_price: "الترقيم | Matricule",
-    currency_code: "السعة | Volume",
-    location: "الموقع | Emplacement"
+    inventory_number: "رقم الجرد | Numéro d'inventaire",
+    designation_fr: "التسمية بالفرنسية | Désignation française",
+    designation_ar: "التسمية بالعربية | Désignation arabe",
+    category_fr: "الصنف | Catégorie",
+    category_ar: "الصنف | Catégorie",
+    brand: "العلامة التجارية | Marque",
+    model: "الطراز | Modèle",
+    location: "الموقع | Emplacement",
+    status: "الحالة | État",
+    description_fr: "الوصف بالفرنسية | Description française",
+    description_ar: "الوصف بالعربية | Description arabe",
+    department_fr: "المصلحة | Service",
+    department_ar: "المصلحة | Service",
+    serial_number: "الرقم التسلسلي | Numéro de série",
+    acquisition_date: "تاريخ الاقتناء | Date d'acquisition",
+    purchase_price: "سعر الاقتناء | Prix d'acquisition",
+    created_at: "تاريخ التسجيل | Date de création",
+    updated_at: "تاريخ التحديث | Date de mise à jour"
   };
 
   return labels[key] || key.replaceAll("_", " ");
 }
-</script>
-</body>
-</html>
