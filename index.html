@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar">
 <head>
@@ -7,9 +8,7 @@
 <title>Fiche du matériel | بطاقة العتاد</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -28,13 +27,11 @@ body {
   box-shadow: 0 8px 30px #102b491c;
 }
 
-/* رأس البطاقة */
 .header {
   background: linear-gradient(135deg, #102f54, #245b91);
   color: white;
   padding: 22px;
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   gap: 18px;
@@ -51,10 +48,7 @@ body {
   padding: 5px;
 }
 
-.header-text {
-  flex: 1;
-  min-width: 0;
-}
+.header-text { flex: 1; min-width: 0; }
 
 .header h1 {
   margin: 0 0 9px;
@@ -74,10 +68,7 @@ body {
   font-size: 14px;
 }
 
-/* محتوى البطاقة */
-.content {
-  padding: 25px;
-}
+.content { padding: 25px; }
 
 .identity {
   display: flex;
@@ -87,6 +78,7 @@ body {
   padding-bottom: 25px;
   border-bottom: 2px solid #e7edf5;
 }
+
 .photo {
   width: 280px;
   height: 245px;
@@ -108,20 +100,12 @@ body {
   animation: horizontalRotation 6s linear infinite;
 }
 
-/* دوران أفقي حول المحور العمودي */
 @keyframes horizontalRotation {
-  from {
-    transform: perspective(800px) rotateY(0deg);
-  }
-  to {
-    transform: perspective(800px) rotateY(360deg);
-  }
+  from { transform: perspective(800px) rotateY(0deg); }
+  to { transform: perspective(800px) rotateY(360deg); }
 }
 
-.identity-info {
-  flex: 1;
-  min-width: 0;
-}
+.identity-info { flex: 1; min-width: 0; }
 
 .label {
   color: #64748b;
@@ -146,10 +130,9 @@ body {
   font-weight: bold;
 }
 
-/* عناوين الأقسام */
 .section-title {
   margin: 28px 0 17px;
-  padding: 0 0 10px;
+  padding-bottom: 10px;
   border-bottom: 3px solid #dce7f3;
   color: #123b68;
   font-size: 20px;
@@ -160,7 +143,6 @@ body {
   text-align: right;
 }
 
-/* شبكة المواصفات */
 .specs {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -175,11 +157,26 @@ body {
   min-width: 0;
 }
 
+.spec-label-ar {
+  direction: rtl;
+  text-align: right;
+  color: #123b68;
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.spec-label-fr {
+  color: #64748b;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
 .spec-value {
   font-weight: 600;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .status {
@@ -200,16 +197,10 @@ body {
   line-height: 1.8;
 }
 
-[hidden] {
-  display: none !important;
-}
+[hidden] { display: none !important; }
 
-/* ملاءمة الهاتف */
-/* ملاءمة الهاتف */
 @media (max-width: 650px) {
-  body {
-    padding: 10px 7px;
-  }
+  body { padding: 10px 7px; }
 
   .header {
     flex-direction: row;
@@ -223,26 +214,13 @@ body {
     flex: 0 0 54px;
   }
 
-  .header h1 {
-    font-size: 12px;
-    line-height: 1.5;
-  }
+  .header h1 { font-size: 12px; line-height: 1.5; }
+  .header h2 { font-size: 13px; }
+  .header p { font-size: 10px; line-height: 1.5; }
 
-  .header h2 {
-    font-size: 13px;
-  }
-
-  .header p {
-    font-size: 10px;
-    line-height: 1.5;
-  }
-
-  .content {
-    padding: 17px;
-  }
+  .content { padding: 17px; }
 
   .identity {
-    display: flex;
     flex-direction: row-reverse;
     align-items: center;
     text-align: right;
@@ -254,149 +232,121 @@ body {
     min-width: 105px;
     max-width: 280px;
     height: 190px;
-    flex-shrink: 0;
   }
 
-  .identity-info {
-    flex: 1;
-    min-width: 0;
-    text-align: right;
-  }
+  .identity-info { text-align: right; }
+  .name { font-size: 19px; }
 
-  .name {
-    font-size: 19px;
-  }
+  .code { padding: 7px 9px; font-size: 12px; }
 
-  .code {
-    padding: 7px 9px;
-    font-size: 12px;
-  }
-
-  .specs {
-    grid-template-columns: 1fr;
-  }
+  .specs { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .photo img {
-    animation: none;
-  }
+  .photo img { animation: none; }
 }
 </style>
 </head>
+
 <body>
 
 <main class="container">
 
-  <header class="header">
+<header class="header">
 
-  <!-- الشعار الأيسر -->
-  <img
-    class="logo"
-    src="assets/logPr.png"
-    alt="شعار المديرية"
-    onerror="this.style.display='none'"
-  >
+  <img class="logo"
+       src="assets/logPr.png"
+       alt="شعار المديرية"
+       onerror="this.style.display='none'">
 
-  <!-- العنوان في الوسط -->
   <div class="header-text">
-
     <h1>
       DIRECTION DE LA PROTECTION CIVILE
       DE LA WILAYA DE GHARDAÏA
     </h1>
 
-    <h2>
-      مديرية الحماية المدنية لولاية غرداية
-    </h2>
+    <h2>مديرية الحماية المدنية لولاية غرداية</h2>
 
     <p>
       FICHE TECHNIQUE DU MATÉRIEL | بطاقة بيانات العتاد
     </p>
-
   </div>
 
-  <!-- الشعار الأيمن -->
-  <img
-    class="logo"
-    src="assets/logA.png"
-    alt="الشعار الثاني"
-    onerror="this.style.display='none'"
-  >
+  <img class="logo"
+       src="assets/logA.png"
+       alt="الشعار الثاني"
+       onerror="this.style.display='none'">
 
 </header>
 
-  <div class="content">
+<div class="content">
 
-    <div id="message" class="status">
-      Chargement des données...
-      <br>
-      جارٍ تحميل بيانات العتاد...
-    </div>
+  <div id="message" class="status">
+    Chargement des données...
+    <br>
+    جارٍ تحميل بيانات العتاد...
+  </div>
 
-    <section id="card" hidden>
+  <section id="card" hidden>
 
-      <div class="identity">
+    <div class="identity">
 
-        <div class="photo">
+      <div class="photo">
+        <img id="equipmentImage"
+             alt="Photo du matériel"
+             hidden>
 
-          <img
-            id="equipmentImage"
-            alt="Photo du matériel"
-            hidden
-          >
+        <span id="noImage">
+          Photo du matériel
+          <br>
+          صورة العتاد
+        </span>
+      </div>
 
-          <span id="noImage">
-            Photo du matériel
-            <br>
-            صورة العتاد
-          </span>
+      <div class="identity-info">
 
+        <div class="label">
+          Désignation | تسمية العتاد
         </div>
 
-        <div class="identity-info">
+        <div id="equipmentName" class="name">—</div>
 
-          <div class="label">
-            Désignation | تسمية العتاد
-          </div>
-
-          <div id="equipmentName" class="name">—</div>
-
-          <div class="label">
-            Numéro d'inventaire | رقم الجرد
-          </div>
-
-          <span id="equipmentCode" class="code">—</span>
-
+        <div class="label">
+          Numéro d'inventaire | رقم الجرد
         </div>
+
+        <span id="equipmentCode" class="code">—</span>
 
       </div>
 
-      <h2 class="section-title">
-        Caractéristiques techniques
-      </h2>
+    </div>
 
-      <h2 class="section-title section-title-ar">
-        المواصفات التقنية
-      </h2>
+    <h2 class="section-title">
+      Caractéristiques techniques du véhicule
+    </h2>
 
-      <div id="specifications" class="specs"></div>
+    <h2 class="section-title section-title-ar">
+      المواصفات التقنية للسيارة
+    </h2>
 
-    </section>
+    <div id="specifications" class="specs"></div>
 
-  </div>
+  </section>
 
-  <footer class="footer">
-    Direction de la Protection Civile de la Wilaya de Ghardaïa
-    <br>
-    مديرية الحماية المدنية لولاية غرداية
-  </footer>
+</div>
+
+<footer class="footer">
+  Direction de la Protection Civile de la Wilaya de Ghardaïa
+  <br>
+  مديرية الحماية المدنية لولاية غرداية
+</footer>
 
 </main>
+
 <script>
 "use strict";
 
-/* رابط دالة Supabase الحالية */
+/* رابط Supabase الحالي */
 const FUNCTION_URL =
 "https://ubxvlawbotfkhegrtmgr.supabase.co/functions/v1/materiel-card";
 
@@ -408,7 +358,7 @@ const card = document.getElementById("card");
 const image = document.getElementById("equipmentImage");
 const noImage = document.getElementById("noImage");
 
-/* عرض رسائل الخطأ والتحميل باللغتين */
+/* رسائل التحميل والأخطاء */
 function showMessage(fr, ar) {
   message.hidden = false;
   message.replaceChildren();
@@ -424,7 +374,7 @@ function showMessage(fr, ar) {
   message.append(first, second);
 }
 
-/* البحث عن أول قيمة متوفرة */
+/* البحث عن أول قيمة موجودة */
 function findValue(data, names) {
   for (const name of names) {
     const value = data[name];
@@ -442,25 +392,121 @@ function findValue(data, names) {
   return "";
 }
 
-/* ترجمة أسماء بعض المواصفات */
-function translateLabel(key) {
-  const labels = {
-    code: "رقم الجرد | Numéro d'inventaire",
-    code_materiel: "رقم العتاد | Code matériel",
-    brand: "العلامة التجارية | Marque",
-    model: "الطراز | Modèle",
-    category_fr: "الصنف | Catégorie",
-    location: "الموقع | Emplacement",
-    status: "الحالة | État",
-    description_fr: "الوصف | Description",
-    department_fr: "المصلحة | Service",
-    designation_fr: "التسمية | Désignation"
-  };
+/*
+  مواصفات السيارة:
+  كل حقل يقبل عدة أسماء محتملة
+  حتى يتوافق مع أسماء الأعمدة المختلفة.
+*/
+const vehicleFields = [
 
-  return labels[key] || key.replaceAll("_", " ");
-}
+  {
+    key: "vehicle_type",
+    ar: "نوع المركبة",
+    fr: "Type de véhicule",
+    aliases: ["vehicle_type", "type_vehicule", "type_fr", "type_ar", "category_fr", "category_ar"]
+  },
 
-/* عرض بيانات العتاد */
+  {
+    key: "brand",
+    ar: "العلامة التجارية",
+    fr: "Marque",
+    aliases: ["brand", "marque"]
+  },
+
+  {
+    key: "model",
+    ar: "الطراز",
+    fr: "Modèle",
+    aliases: ["model", "modele"]
+  },
+
+  {
+    key: "registration_number",
+    ar: "رقم التسجيل",
+    fr: "Matricule d'immatriculation",
+    aliases: ["registration_number", "matricule", "immatriculation", "registration", "matricule_immatriculation"]
+  },
+
+  {
+    key: "chassis_number",
+    ar: "الرقم التسلسلي للهيكل",
+    fr: "Numéro de châssis (VIN)",
+    aliases: ["chassis_number", "vin", "numero_chassis", "numero_de_chassis"]
+  },
+
+  {
+    key: "engine_number",
+    ar: "رقم المحرك",
+    fr: "Numéro de moteur",
+    aliases: ["engine_number", "numero_moteur", "motor_number"]
+  },
+
+  {
+    key: "commissioning_year",
+    ar: "سنة وضعها حيز الخدمة",
+    fr: "Année de mise en service",
+    aliases: ["commissioning_year", "mise_en_service_year", "year_in_service", "annee_mise_en_service"]
+  },
+
+  {
+    key: "fuel_type",
+    ar: "نوع الوقود",
+    fr: "Type de carburant",
+    aliases: ["fuel_type", "carburant", "type_carburant"]
+  },
+
+  {
+    key: "engine_capacity",
+    ar: "سعة المحرك",
+    fr: "Cylindrée",
+    aliases: ["engine_capacity", "cylindree", "engine_displacement"]
+  },
+
+  {
+    key: "tank_capacity",
+    ar: "سعة خزان الوقود",
+    fr: "Capacité du réservoir",
+    aliases: ["tank_capacity", "fuel_tank_capacity", "capacite_reservoir"]
+  },
+
+  {
+    key: "volume",
+    ar: "الحجم / السعة",
+    fr: "Volume / Capacité",
+    aliases: ["volume", "capacity", "vehicle_volume", "capacite"]
+  },
+
+  {
+    key: "department",
+    ar: "المصلحة المستعملة",
+    fr: "Service utilisateur",
+    aliases: ["department_ar", "department_fr", "department", "service_ar", "service_fr"]
+  },
+
+  {
+    key: "location",
+    ar: "مكان التواجد",
+    fr: "Lieu d'affectation",
+    aliases: ["location", "lieu_affectation", "emplacement"]
+  },
+
+  {
+    key: "status",
+    ar: "الحالة",
+    fr: "État du véhicule",
+    aliases: ["status", "etat"]
+  },
+
+  {
+    key: "observations",
+    ar: "الملاحظات",
+    fr: "Observations",
+    aliases: ["observations", "observation", "description_ar", "description_fr", "notes"]
+  }
+
+];
+
+/* عرض مواصفات السيارة */
 function displayData(result) {
 
   let data =
@@ -489,10 +535,11 @@ function displayData(result) {
   ]);
 
   const code = findValue(data, [
+    "inventory_number",
+    "inventory_no",
+    "numero_inventaire",
     "code",
     "code_materiel",
-    "numero_inventaire",
-    "inventory_number",
     "reference"
   ]);
 
@@ -506,23 +553,23 @@ function displayData(result) {
   ]);
 
   document.getElementById("equipmentName").textContent =
-    name || "Matériel | العتاد";
+    name || "Véhicule | مركبة";
 
   document.getElementById("equipmentCode").textContent =
     code || publicId || "—";
 
-  /* عرض الصورة */
+  /* الصورة */
   image.hidden = true;
   noImage.hidden = false;
 
   if (photo && /^https?:\/\//i.test(String(photo))) {
 
-    image.onload = function () {
+    image.onload = function() {
       image.hidden = false;
       noImage.hidden = true;
     };
 
-    image.onerror = function () {
+    image.onerror = function() {
       image.hidden = true;
       noImage.hidden = false;
       noImage.textContent =
@@ -532,53 +579,35 @@ function displayData(result) {
     image.src = photo;
   }
 
-/* استبعاد حقول الصور والمعرّفات من المواصفات */
-const excluded = new Set([
-  "id",
-  "public_id",
-  "department_id",
-  "image_url",
-  "photo_url",
-  "image",
-  "photo",
-  "url_photo",
-  "image_path"
-]);
-  "image_url",
-  "photo_url",
-  "image",
-  "photo",
-  "url_photo",
-  "image_path"
-]);
+  /* إنشاء المواصفات المحددة فقط */
   const specifications =
     document.getElementById("specifications");
 
   specifications.replaceChildren();
 
-  const entries = Object.entries(data).filter(
-    ([key, value]) =>
-      !excluded.has(key) &&
-      value !== null &&
-      value !== undefined &&
-      typeof value !== "object" &&
-      String(value).trim() !== ""
-  );
+  for (const field of vehicleFields) {
 
-  for (const [key, value] of entries) {
+    const value = findValue(data, field.aliases);
+
+    /* عدم عرض الحقول الفارغة */
+    if (value === "") continue;
 
     const item = document.createElement("div");
     item.className = "spec";
 
-    const label = document.createElement("div");
-    label.className = "label";
-    label.textContent = translateLabel(key);
+    const arabicLabel = document.createElement("div");
+    arabicLabel.className = "spec-label-ar";
+    arabicLabel.textContent = field.ar;
+
+    const frenchLabel = document.createElement("div");
+    frenchLabel.className = "spec-label-fr";
+    frenchLabel.textContent = field.fr;
 
     const content = document.createElement("div");
     content.className = "spec-value";
     content.textContent = String(value);
 
-    item.append(label, content);
+    item.append(arabicLabel, frenchLabel, content);
     specifications.append(item);
   }
 
@@ -644,31 +673,8 @@ async function loadEquipment() {
 }
 
 loadEquipment();
+
 </script>
 
 </body>
 </html>
-function translateLabel(key) {
-  const labels = {
-    inventory_number: "رقم الجرد | Numéro d'inventaire",
-    designation_fr: "التسمية بالفرنسية | Désignation française",
-    designation_ar: "التسمية بالعربية | Désignation arabe",
-    category_fr: "الصنف | Catégorie",
-    category_ar: "الصنف | Catégorie",
-    brand: "العلامة التجارية | Marque",
-    model: "الطراز | Modèle",
-    location: "الموقع | Emplacement",
-    status: "الحالة | État",
-    description_fr: "الوصف بالفرنسية | Description française",
-    description_ar: "الوصف بالعربية | Description arabe",
-    department_fr: "المصلحة | Service",
-    department_ar: "المصلحة | Service",
-    serial_number: "الرقم التسلسلي | Numéro de série",
-    acquisition_date: "تاريخ الاقتناء | Date d'acquisition",
-    purchase_price: "سعر الاقتناء | Prix d'acquisition",
-    created_at: "تاريخ التسجيل | Date de création",
-    updated_at: "تاريخ التحديث | Date de mise à jour"
-  };
-
-  return labels[key] || key.replaceAll("_", " ");
-}
