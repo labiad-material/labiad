@@ -586,7 +586,9 @@ const excluded = new Set([
 
     const label = document.createElement("div");
     label.className = "label";
-    label.textContent = translateLabel(key);
+    const normalizedKey = key.trim().toLowerCase();
+
+label.textContent = translateLabel(normalizedKey);
 
     const content = document.createElement("div");
     content.className = "spec-value";
@@ -660,17 +662,16 @@ async function loadEquipment() {
 loadEquipment();
 
 /* ترجمة أسماء المواصفات */
-
 function translateLabel(key) {
   const labels = {
     acquisition_date: "سنة الاستعمال | Année de mise en service",
     purchase_price: "الترقيم | Matricule",
-    currency_code: "السعة | Volume"
+    currency_code: "السعة | Volume",
+    location: "الموقع | Emplacement"
   };
 
   return labels[key] || key.replaceAll("_", " ");
 }
-
 </script>
 </body>
 </html>
