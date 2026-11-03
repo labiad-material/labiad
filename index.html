@@ -400,6 +400,48 @@ function findValue(data, names) {
 const vehicleFields = [
 
   {
+    key: "purchase_price",
+    ar: "سعر الشراء",
+    fr: "Purchase price",
+    aliases: ["purchase_price", "prix_achat", "purchasePrice"]
+  },
+
+  {
+    key: "matricule",
+    ar: "الترقيم",
+    fr: "Matricule",
+    aliases: ["matricule", "registration_number", "registration", "immatriculation", "matricule_immatriculation"]
+  },
+
+  {
+    key: "currency_code",
+    ar: "رمز العملة",
+    fr: "Currency code",
+    aliases: ["currency_code", "currency", "devise", "code_devise"]
+  },
+
+  {
+    key: "volume",
+    ar: "السعة",
+    fr: "Volume",
+    aliases: ["volume", "capacity", "vehicle_volume", "capacite"]
+  },
+
+  {
+    key: "acquisition_date",
+    ar: "تاريخ الاقتناء",
+    fr: "Acquisition date",
+    aliases: ["acquisition_date", "date_acquisition", "date_achat"]
+  },
+
+  {
+    key: "commissioning_year",
+    ar: "سنة الاستعمال",
+    fr: "Année de mise en service",
+    aliases: ["commissioning_year", "mise_en_service_year", "year_in_service", "annee_mise_en_service"]
+  },
+
+  {
     key: "vehicle_type",
     ar: "نوع المركبة",
     fr: "Type de véhicule",
@@ -421,15 +463,8 @@ const vehicleFields = [
   },
 
   {
-    key: "registration_number",
-    ar: "رقم التسجيل",
-    fr: "Matricule d'immatriculation",
-    aliases: ["registration_number", "matricule", "immatriculation", "registration", "matricule_immatriculation"]
-  },
-
-  {
     key: "chassis_number",
-    ar: "الرقم التسلسلي للهيكل",
+    ar: "رقم الهيكل",
     fr: "Numéro de châssis (VIN)",
     aliases: ["chassis_number", "vin", "numero_chassis", "numero_de_chassis"]
   },
@@ -439,13 +474,6 @@ const vehicleFields = [
     ar: "رقم المحرك",
     fr: "Numéro de moteur",
     aliases: ["engine_number", "numero_moteur", "motor_number"]
-  },
-
-  {
-    key: "commissioning_year",
-    ar: "سنة وضعها حيز الخدمة",
-    fr: "Année de mise en service",
-    aliases: ["commissioning_year", "mise_en_service_year", "year_in_service", "annee_mise_en_service"]
   },
 
   {
@@ -467,13 +495,6 @@ const vehicleFields = [
     ar: "سعة خزان الوقود",
     fr: "Capacité du réservoir",
     aliases: ["tank_capacity", "fuel_tank_capacity", "capacite_reservoir"]
-  },
-
-  {
-    key: "volume",
-    ar: "الحجم / السعة",
-    fr: "Volume / Capacité",
-    aliases: ["volume", "capacity", "vehicle_volume", "capacite"]
   },
 
   {
@@ -501,11 +522,10 @@ const vehicleFields = [
     key: "observations",
     ar: "الملاحظات",
     fr: "Observations",
-    aliases: ["observations", "observation", "description_ar", "description_fr", "notes"]
+    aliases: ["observations_ar", "observations_fr", "observations", "observation", "description_ar", "description_fr", "notes"]
   }
 
 ];
-
 /* عرض مواصفات السيارة */
 function displayData(result) {
 
