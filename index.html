@@ -136,11 +136,8 @@ body {
   border-bottom: 3px solid #dce7f3;
   color: #123b68;
   font-size: 20px;
-}
-
-.section-title-ar {
-  direction: rtl;
-  text-align: right;
+  line-height: 1.8;
+  grid-column: 1 / -1;
 }
 
 .specs {
@@ -240,6 +237,7 @@ body {
   .code { padding: 7px 9px; font-size: 12px; }
 
   .specs { grid-template-columns: 1fr; }
+  .section-title { font-size: 17px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -321,14 +319,6 @@ body {
 
     </div>
 
-    <h2 class="section-title">
-      Caractéristiques techniques du véhicule
-    </h2>
-
-    <h2 class="section-title section-title-ar">
-      المواصفات التقنية للسيارة
-    </h2>
-
     <div id="specifications" class="specs"></div>
 
   </section>
@@ -392,141 +382,194 @@ function findValue(data, names) {
   return "";
 }
 
-/*
-  مواصفات السيارة:
-  كل حقل يقبل عدة أسماء محتملة
-  حتى يتوافق مع أسماء الأعمدة المختلفة.
-*/
+/* ترجمة حالات العتاد */
+const statusTranslations = {
+  in_service: "En service | في الخدمة",
+  maintenance: "En maintenance | في الصيانة",
+  out_of_service: "Hors service | خارج الخدمة",
+  retired: "Réformé | مشطوب"
+};
+
+/* الحقول والأقسام */
 const vehicleFields = [
 
+  /* 1 - IDENTIFICATION */
+  { section: "Identification | التعريف بالعتاد" },
+
   {
-    key: "purchase_price",
-    ar: "سعر الشراء",
-    fr: "Purchase price",
-    aliases: ["purchase_price", "prix_achat", "purchasePrice"]
+    ar: "رقم الجرد",
+    fr: "Numéro d'inventaire",
+    aliases: ["inventory_number", "inventory_no", "numero_inventaire"]
   },
 
   {
-    key: "matricule",
-    ar: "الترقيم",
-    fr: "Matricule",
-    aliases: ["matricule", "registration_number", "registration", "immatriculation", "matricule_immatriculation"]
+    ar: "التسمية بالفرنسية",
+    fr: "Désignation française",
+    aliases: ["designation_fr", "nom_fr", "name_fr"]
   },
 
   {
-    key: "currency_code",
-    ar: "رمز العملة",
-    fr: "Currency code",
-    aliases: ["currency_code", "currency", "devise", "code_devise"]
+    ar: "التسمية بالعربية",
+    fr: "Désignation arabe",
+    aliases: ["designation_ar", "nom_ar", "name_ar"]
   },
 
   {
-    key: "volume",
-    ar: "السعة",
-    fr: "Volume",
-    aliases: ["volume", "capacity", "vehicle_volume", "capacite"]
+    ar: "النوع",
+    fr: "Type / catégorie (FR)",
+    aliases: ["category_fr", "vehicle_type", "type_vehicule"]
   },
 
   {
-    key: "acquisition_date",
-    ar: "تاريخ الاقتناء",
-    fr: "Acquisition date",
-    aliases: ["acquisition_date", "date_acquisition", "date_achat"]
+    ar: "النوع / الصنف (AR)",
+    fr: "Type / catégorie (AR)",
+    aliases: ["category_ar"]
   },
 
   {
-    key: "commissioning_year",
-    ar: "سنة الاستعمال",
-    fr: "Année de mise en service",
-    aliases: ["commissioning_year", "mise_en_service_year", "year_in_service", "annee_mise_en_service"]
-  },
-
-  {
-    key: "vehicle_type",
-    ar: "نوع المركبة",
-    fr: "Type de véhicule",
-    aliases: ["vehicle_type", "type_vehicule", "type_fr", "type_ar", "category_fr", "category_ar"]
-  },
-
-  {
-    key: "brand",
     ar: "العلامة التجارية",
     fr: "Marque",
     aliases: ["brand", "marque"]
   },
 
   {
-    key: "model",
     ar: "الطراز",
     fr: "Modèle",
     aliases: ["model", "modele"]
   },
 
   {
-    key: "chassis_number",
+    ar: "الرقم التسلسلي",
+    fr: "Numéro de série",
+    aliases: ["serial_number", "numero_serie"]
+  },
+
+  {
+    ar: "الترقيم",
+    fr: "Matricule",
+    aliases: ["matricule", "registration_number", "immatriculation"]
+  },
+
+  {
     ar: "رقم الهيكل",
     fr: "Numéro de châssis (VIN)",
-    aliases: ["chassis_number", "vin", "numero_chassis", "numero_de_chassis"]
+    aliases: ["chassis_number", "vin", "numero_chassis"]
   },
 
   {
-    key: "engine_number",
     ar: "رقم المحرك",
     fr: "Numéro de moteur",
-    aliases: ["engine_number", "numero_moteur", "motor_number"]
+    aliases: ["engine_number", "numero_moteur"]
+  },
+
+  /* 2 - ACQUISITION */
+  {
+    section: "Acquisition et mise en service | الاقتناء ووضعه حيز الخدمة"
   },
 
   {
-    key: "fuel_type",
+    ar: "سعر الشراء",
+    fr: "Purchase price",
+    aliases: ["purchase_price", "prix_achat"]
+  },
+
+  {
+    ar: "رمز العملة",
+    fr: "Currency code",
+    aliases: ["currency_code", "currency", "devise"]
+  },
+
+  {
+    ar: "تاريخ الاقتناء",
+    fr: "Acquisition date",
+    aliases: ["acquisition_date", "date_acquisition"]
+  },
+
+  {
+    ar: "سنة وضعها حيز الخدمة",
+    fr: "Année de mise en service",
+    aliases: ["commissioning_year", "annee_mise_en_service"]
+  },
+
+  {
+    ar: "السعة / الحجم",
+    fr: "Volume – capacité",
+    aliases: ["volume", "capacity", "vehicle_volume"]
+  },
+
+  {
     ar: "نوع الوقود",
     fr: "Type de carburant",
-    aliases: ["fuel_type", "carburant", "type_carburant"]
+    aliases: ["fuel_type", "carburant"]
   },
 
   {
-    key: "engine_capacity",
     ar: "سعة المحرك",
     fr: "Cylindrée",
-    aliases: ["engine_capacity", "cylindree", "engine_displacement"]
+    aliases: ["engine_capacity", "cylindree"]
   },
 
   {
-    key: "tank_capacity",
-    ar: "سعة خزان الوقود",
+    ar: "سعة الخزان",
     fr: "Capacité du réservoir",
-    aliases: ["tank_capacity", "fuel_tank_capacity", "capacite_reservoir"]
+    aliases: ["tank_capacity", "fuel_tank_capacity"]
+  },
+
+  /* 3 - AFFECTATION */
+  {
+    section: "Affectation et état | التخصيص والحالة"
   },
 
   {
-    key: "department",
     ar: "المصلحة المستعملة",
     fr: "Service utilisateur",
-    aliases: ["department_ar", "department_fr", "department", "service_ar", "service_fr"]
+    aliases: ["department_fr", "department_ar", "department"]
   },
 
   {
-    key: "location",
     ar: "مكان التواجد",
     fr: "Lieu d'affectation",
     aliases: ["location", "lieu_affectation", "emplacement"]
   },
 
   {
-    key: "status",
     ar: "الحالة",
-    fr: "État du véhicule",
+    fr: "État",
     aliases: ["status", "etat"]
   },
 
+  /* 4 - DESCRIPTION */
   {
-    key: "observations",
-    ar: "الملاحظات",
-    fr: "Observations",
-    aliases: ["observations_ar", "observations_fr", "observations", "observation", "description_ar", "description_fr", "notes"]
+    section: "Description et observations | الوصف والملاحظات"
+  },
+
+  {
+    ar: "الوصف",
+    fr: "Description (FR)",
+    aliases: ["description_fr"]
+  },
+
+  {
+    ar: "الوصف بالعربية",
+    fr: "Description (AR)",
+    aliases: ["description_ar"]
+  },
+
+  {
+    ar: "ملاحظات",
+    fr: "Observations (FR)",
+    aliases: ["observations_fr"]
+  },
+
+  {
+    ar: "الملاحظات بالعربية",
+    fr: "Observations (AR)",
+    aliases: ["observations_ar"]
   }
 
 ];
-/* عرض مواصفات السيارة */
+
+/* عرض بطاقة العتاد */
 function displayData(result) {
 
   let data =
@@ -573,12 +616,12 @@ function displayData(result) {
   ]);
 
   document.getElementById("equipmentName").textContent =
-    name || "Véhicule | مركبة";
+    name || "Matériel | العتاد";
 
   document.getElementById("equipmentCode").textContent =
     code || publicId || "—";
 
-  /* الصورة */
+  /* عرض الصورة */
   image.hidden = true;
   noImage.hidden = false;
 
@@ -599,7 +642,7 @@ function displayData(result) {
     image.src = photo;
   }
 
-  /* إنشاء المواصفات المحددة فقط */
+  /* إنشاء المواصفات */
   const specifications =
     document.getElementById("specifications");
 
@@ -607,9 +650,18 @@ function displayData(result) {
 
   for (const field of vehicleFields) {
 
+    /* عنوان القسم */
+    if (field.section) {
+      const heading = document.createElement("h2");
+      heading.className = "section-title";
+      heading.textContent = field.section;
+      specifications.append(heading);
+      continue;
+    }
+
     const value = findValue(data, field.aliases);
 
-    /* عدم عرض الحقول الفارغة */
+    /* إخفاء الحقول الفارغة */
     if (value === "") continue;
 
     const item = document.createElement("div");
@@ -625,7 +677,16 @@ function displayData(result) {
 
     const content = document.createElement("div");
     content.className = "spec-value";
-    content.textContent = String(value);
+
+    let displayValue = String(value);
+
+    /* ترجمة الحالة */
+    if (field.aliases.includes("status")) {
+      displayValue =
+        statusTranslations[displayValue] || displayValue;
+    }
+
+    content.textContent = displayValue;
 
     item.append(arabicLabel, frenchLabel, content);
     specifications.append(item);
