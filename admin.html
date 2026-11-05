@@ -492,7 +492,7 @@ async function saveEquipment(event) {
 
 async function editEquipment(id) {
   clearMessage("appMessage");
-  const {data, error} = await db.from("materiels").select("*").eq("id", id).single();
+ const {data, error} = await db.from("materiels").select("*").eq("id", id).single();
   if (error) { showMessage("appMessage", "Erreur : " + error.message); return; }
 
   $("recordId").value = data.id || "";
@@ -589,7 +589,7 @@ function excelDateToISO(value) {
   }
   const text = String(value).trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
-  const match = text.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+ const match = text.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
   if (match) return `${match[3]}-${match[2].padStart(2,"0")}-${match[1].padStart(2,"0")}`;
   throw new Error("Date Excel invalide : " + text);
 }
@@ -609,7 +609,18 @@ $("previewExcelBtn").addEventListener("click", async () => {
   setBusy(button, true, "Lecture...");
   try {
     if (typeof XLSX === "undefined") throw new Error("Bibliothèque Excel non chargée. Vérifiez Internet.");
-    const buffer = await file.arrayBuffer();
+    // قراءة الملف باستعمال FileReader لتفادي مشاكل file.arrayBuffer()
+    const buffer = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(
+        reader.error || new Error("تعذرت قراءة الملف. انسخه إلى الجهاز وحاول مجدداً.")
+      );
+      reader.onabort = () => reject(new Error("تم إلغاء قراءة ملف Excel."));
+
+      reader.readAsArrayBuffer(file);
+    });
     const workbook = XLSX.read(buffer, {type:"array", cellDates:true});
     if (!workbook.SheetNames.length) throw new Error("Le fichier ne contient aucune feuille.");
     const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {defval:"", raw:true});
@@ -617,6 +628,18 @@ $("previewExcelBtn").addEventListener("click", async () => {
     const required = ["inventory_number","designation_fr","designation_ar"];
     const missing = required.filter(k => !(k in rows[0]));
     if (missing.length) throw new Error("أعمدة إجبارية غير موجودة: " + missing.join(", "));
+
+    const normalizeExcelStatus = raw => {
+      const s = normalizeText(raw);
+      const map = {
+        "في الخدمة":"in_service", "جيدة":"in_service", "جيد":"in_service",
+        "en service":"in_service", "active":"in_service",
+        "في الصيانة":"maintenance", "صيانة":"maintenance", "en maintenance":"maintenance",
+        "خارج الخدمة":"out_of_service", "معطلة":"out_of_service", "hors service":"out_of_service",
+        "مشطوب":"retired", "réformé":"retired", "reforme":"retired"
+      };
+      return map[s] || s || "in_service";
+    };
 
     excelRecords = rows.map(row => {
       const priceText = cellText(row, "purchase_price");
@@ -638,12 +661,16 @@ $("previewExcelBtn").addEventListener("click", async () => {
         acquisition_date:excelDateToISO(row.acquisition_date),
         commissioning_year:yearText === "" ? null : Number(yearText),
         volume:cellText(row,"volume") || null,
-        fuel_type:cellText(row,"fuel_type") || null,
-        engine_capacity:cellText(row,"engine_capacity") || null,
+        fuel_type:cellText(row,"fuel_type") || (
+          /^(مازوت|ديزل|بنزين|essence|diesel|gasoil)$/i.test(cellText(row,"engine_capacity"))
+            ? cellText(row,"engine_capacity") : null
+        ),
+        engine_capacity:/^(مازوت|ديزل|بنزين|essence|diesel|gasoil)$/i.test(cellText(row,"engine_capacity"))
+          ? null : (cellText(row,"engine_capacity") || null),
         tank_capacity:cellText(row,"tank_capacity") || null,
         department_fr:cellText(row,"department_fr") || cellText(row,"department"),
         department_ar:cellText(row,"department_ar") || cellText(row,"department"),
-        status:cellText(row,"status") || "in_service",
+        status:normalizeExcelStatus(cellText(row,"status")),
         location:cellText(row,"location") || null,
         description_fr:cellText(row,"description_fr") || null,
         description_ar:cellText(row,"description_ar") || null,
@@ -661,9 +688,7 @@ $("previewExcelBtn").addEventListener("click", async () => {
     );
     if (invalid.length) throw new Error("توجد بيانات ناقصة أو سعر أو سنة أو حالة غير صحيحة. راجع الملف.");
 
-    const nums = excelRecords.map(r => normalizeText(r.inventory_number));
-    const duplicates = [...new Set(nums.filter((v,i,a) => a.indexOf(v) !== i))];
-    if (duplicates.length) throw new Error("أرقام جرد مكررة داخل الملف: " + duplicates.join(", "));
+    // تكرار رقم الجرد مسموح داخل ملف Excel.
 
     const columns = Object.keys(excelRecords[0]).filter(k => excelRecords.some(r => r[k] !== null && r[k] !== "" && r[k] !== undefined));
     const table = document.createElement("table");
@@ -697,15 +722,8 @@ $("importExcelBtn").addEventListener("click", async () => {
   const button=$("importExcelBtn");
   setBusy(button,true,"Importation...");
   try {
-    const {data:existing,error:existingError}=await db.from("materiels").select("inventory_number");
-    if (existingError) throw existingError;
-    const existingNumbers=new Set((existing||[]).map(r=>normalizeText(r.inventory_number)));
     const imported=[], skipped=[];
     for (const r of excelRecords) {
-      if (existingNumbers.has(normalizeText(r.inventory_number))) {
-        skipped.push(r.inventory_number+" (رقم الجرد موجود مسبقاً)");
-        continue;
-      }
       let departmentId=null;
       if (r.department_fr || r.department_ar) {
         let found=departments.find(d =>
@@ -754,7 +772,7 @@ $("importExcelBtn").addEventListener("click", async () => {
       };
       const {error}=await db.from("materiels").insert(payload);
       if (error) skipped.push(r.inventory_number+" ("+error.message+")");
-      else { imported.push(r.inventory_number); existingNumbers.add(normalizeText(r.inventory_number)); }
+      else imported.push(r.inventory_number);
     }
     await loadDepartments();
     await loadEquipment();
