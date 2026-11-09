@@ -67,11 +67,42 @@ th{background:#edf2f8;color:#163b67}
       <label for="password">Mot de passe | كلمة المرور</label>
       <input id="password" type="password" autocomplete="current-password" required>
     </div>
-    <div class="actions"><button class="primary" type="submit">Se connecter | تسجيل الدخول</button></div>
+    <div class="actions">
+  <button class="primary" type="submit">
+    Se connecter | تسجيل الدخول
+  </button>
+  <button class="secondary" id="forgotPasswordBtn" type="button">
+    Mot de passe oublié ? | نسيت كلمة المرور؟
+  </button>
+</div>
   </form>
   <div id="loginMessage" class="message error"></div>
 </section>
+<section id="resetPasswordPanel" class="card hidden"
+         style="max-width:440px;margin:35px auto">
 
+  <h2>Créer un nouveau mot de passe | إنشاء كلمة مرور جديدة</h2>
+
+  <form id="resetPasswordForm">
+    <label for="newPassword">Nouveau mot de passe | كلمة المرور الجديدة</label>
+    <input id="newPassword" type="password"
+           minlength="8" required autocomplete="new-password">
+
+    <br><br>
+
+    <label for="confirmPassword">Confirmer le mot de passe | تأكيد كلمة المرور</label>
+    <input id="confirmPassword" type="password"
+           minlength="8" required autocomplete="new-password">
+
+    <div class="actions">
+      <button class="primary" type="submit">
+        Enregistrer | حفظ كلمة المرور
+      </button>
+    </div>
+  </form>
+
+  <div id="resetPasswordMessage" class="message"></div>
+</section>
 <section id="appPanel">
   <section class="card">
     <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
@@ -309,7 +340,42 @@ function setBusy(button, busy, busyText="Veuillez patienter...") {
 }
 function value(id) { return $(id).value.trim(); }
 function nullable(id) { return value(id) || null; }
+async function sendPasswordReset() {
+  const email = $("email").value.trim();
 
+  clearMessage("loginMessage");
+
+  if (!email) {
+    showMessage(
+      "loginMessage",
+      "يرجى إدخال البريد الإلكتروني أولاً."
+    );
+    $("email").focus();
+    return;
+  }
+
+  const button = $("forgotPasswordBtn");
+  setBusy(button, true, "Envoi...");
+
+  try {
+    const { error } = await db.auth.resetPasswordForEmail(email, {
+      redirectTo: CARD_BASE_URL
+    });
+
+    if (error) throw error;
+
+    showMessage(
+      "loginMessage",
+      "تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني. تحقق من صندوق الوارد.",
+      true
+    );
+
+  } catch (error) {
+    showMessage("loginMessage", "Erreur : " + error.message);
+  } finally {
+    setBusy(button, false);
+  }
+}
 async function requireManager() {
   const {data, error} = await db.auth.getSession();
   const user = data?.session?.user;
@@ -790,9 +856,56 @@ $("importExcelBtn").addEventListener("click", async () => {
     setBusy(button,false);
   }
 });
+$("resetPasswordForm").addEventListener("submit", async event => {
+  event.preventDefault();
 
+  const password = $("newPassword").value;
+  const confirmation = $("confirmPassword").value;
+
+  clearMessage("resetPasswordMessage");
+
+  if (password.length < 8) {
+    showMessage("resetPasswordMessage",
+      "كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل.");
+    return;
+  }
+
+  if (password !== confirmation) {
+    showMessage("resetPasswordMessage",
+      "كلمتا المرور غير متطابقتين.");
+    return;
+  }
+
+  const button = $("resetPasswordForm").querySelector('button[type="submit"]');
+  setBusy(button, true, "Enregistrement...");
+
+  try {
+    const { error } = await db.auth.updateUser({
+      password: password
+    });
+
+    if (error) throw error;
+
+    await db.auth.signOut();
+
+    $("resetPasswordForm").reset();
+    $("resetPasswordPanel").classList.add("hidden");
+    $("loginPanel").style.display = "block";
+
+    showMessage("loginMessage",
+      "تم تغيير كلمة المرور بنجاح. يمكنك تسجيل الدخول الآن.",
+      true
+    );
+
+  } catch (error) {
+    showMessage("resetPasswordMessage", "Erreur : " + error.message);
+  } finally {
+    setBusy(button, false);
+  }
+});
 /* Events */
 $("loginForm").addEventListener("submit", async event => {
+$("forgotPasswordBtn").addEventListener("click", sendPasswordReset);
   event.preventDefault();
   clearMessage("loginMessage");
   const {error}=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});
@@ -841,7 +954,15 @@ $("equipmentRows").addEventListener("click",async event=>{
   }
 });
 
-db.auth.onAuthStateChange((_event,session)=>{
+db.auth.onAuthStateChange((event, session) => {
+
+  if (event === "PASSWORD_RECOVERY") {
+    $("loginPanel").style.display = "none";
+    $("appPanel").style.display = "none";
+    $("resetPasswordPanel").classList.remove("hidden");
+    return;
+  }
+
   if (!session) return;
   setTimeout(async()=>{
     if (await requireManager()) {
