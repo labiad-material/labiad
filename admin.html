@@ -34,6 +34,11 @@ th{background:#edf2f8;color:#163b67}.small{font-size:12px;color:#68778a;overflow
 .hidden{display:none!important}#openCardLink{color:#163b67;font-weight:bold;display:inline-block;margin:12px}
 .section-note{grid-column:1/-1;color:#163b67;font-weight:bold;border-bottom:1px solid #e5e9ef;padding:8px 0 5px;margin-top:5px}
 .alert-row{background:#fff4e5}
+.department-buttons{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.department-toggle{display:flex;width:100%;justify-content:space-between;align-items:center;text-align:right;background:#e7edf5;color:#163b67;border:1px solid #cbd7e6;padding:13px 15px}
+.department-toggle:active{background:#dce8f5}
+.department-content-row td{padding:8px 4px 14px}
+#currentAccountLabel{color:#52657c;font-weight:bold}
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.grid{grid-template-columns:1fr}.card{padding:15px}header h1{font-size:20px}}
 </style>
@@ -45,7 +50,7 @@ th{background:#edf2f8;color:#163b67}.small{font-size:12px;color:#68778a;overflow
 </header>
 <main>
 <section id="loginPanel" class="card">
-  <h2>Connexion administrateur | دخول المدير</h2>
+  <h2>Connexion | تسجيل الدخول</h2>
   <form id="loginForm">
     <div class="field"><label for="email">Adresse e-mail | البريد الإلكتروني</label><input id="email" type="email" autocomplete="username" required></div>
     <br>
@@ -68,8 +73,10 @@ th{background:#edf2f8;color:#163b67}.small{font-size:12px;color:#68778a;overflow
 <section id="appPanel">
   <section class="card">
     <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
-      <h2 style="margin:0">Parc matériel | حظيرة العتاد</h2>
-      <button id="logoutBtn" class="secondary" type="button">Déconnexion | خروج</button>
+      <div><h2 style="margin:0">Unité principale | الوحدة الرئيسية</h2><p id="currentAccountLabel" class="small" style="margin:6px 0 0"></p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button id="logoutBtn" class="secondary" type="button">Déconnexion | خروج</button>
+      </div>
     </div>
     <div id="appMessage" class="message"></div>
   </section>
@@ -136,6 +143,13 @@ th{background:#edf2f8;color:#163b67}.small{font-size:12px;color:#68778a;overflow
     <div class="tablewrap"><table><thead><tr><th>N° inventaire</th><th>Désignation</th><th>المسمى</th><th>Matricule</th><th>État / الحالة</th><th>Actions</th></tr></thead><tbody id="equipmentRows"><tr><td colspan="6">Chargement... | جار التحميل...</td></tr></tbody></table></div>
   </section>
 
+  <section class="card hidden" id="maintenanceOverviewPanel">
+    <h2>سجل الصيانة حسب الوحدة | Maintenance par unité</h2>
+    <p class="small">يعرض هذا السجل عمليات الصيانة مجمّعة حسب الوحدة والعتاد المرتبط بها.</p>
+    <div id="maintenanceOverviewMessage" class="message"></div>
+    <div id="maintenanceOverview"></div>
+  </section>
+
   <section class="card hidden" id="maintenancePanel">
     <h2>Maintenance du véhicule | صيانة المركبة</h2><p id="maintenanceVehicleName" class="small"></p><div id="maintenanceMessage" class="message"></div>
     <form id="maintenanceForm"><input type="hidden" id="maintenanceId">
@@ -161,6 +175,15 @@ th{background:#edf2f8;color:#163b67}.small{font-size:12px;color:#68778a;overflow
   <section class="card hidden" id="vehicleEquipmentPanel">
     <h2>Équipements des véhicules | معدات المركبات</h2><div id="vehicleEquipmentMessage" class="message"></div>
     <div class="field"><label for="vehicleEquipmentVehicle">Choisir le véhicule | اختر المركبة</label><select id="vehicleEquipmentVehicle"><option value="">-- Choisir | اختر --</option></select></div>
+    <section class="card" style="margin-top:18px;background:#f7f9fc;border:1px solid #dce5ef;box-shadow:none">
+      <h2>Galerie photos du véhicule | معرض صور المركبة</h2>
+      <p class="small">أضف صوراً متعددة لهذه المركبة. ستظهر الصور للزوار عند فتح بطاقة QR الخاصة بها.</p>
+      <div class="field"><label for="vehicleGalleryFiles">Choisir des photos | اختر الصور</label><input id="vehicleGalleryFiles" type="file" accept="image/jpeg,image/png,image/webp" multiple></div>
+      <div class="field" style="margin-top:10px"><label for="vehicleGalleryCaption">Légende (facultatif) | وصف الصور (اختياري)</label><input id="vehicleGalleryCaption" maxlength="160" placeholder="مثال: الجهة الأمامية للمركبة"></div>
+      <div class="actions"><button class="primary" id="uploadVehicleGalleryBtn" type="button" disabled>Ajouter les photos | رفع الصور</button></div>
+      <div id="vehicleGalleryMessage" class="message"></div>
+      <div id="vehicleGalleryList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-top:14px"></div>
+    </section>
     <div class="actions"><button class="secondary" id="closeVehicleEquipmentBtn" type="button">Fermer | إغلاق</button><button class="secondary" id="downloadVehicleTemplateBtn" type="button">Modèle Excel | نموذج Excel</button></div>
     <hr style="border:0;border-top:1px solid #e5e9ef;margin:20px 0">
     <h2 id="vehicleEquipmentFormTitle">Ajouter un équipement | إضافة معدات</h2>
@@ -200,6 +223,10 @@ th{background:#edf2f8;color:#163b67}.small{font-size:12px;color:#68778a;overflow
 const SUPABASE_URL = "https://ubxvlawbotfkhegrtmgr.supabase.co";
 const SUPABASE_KEY = "sb_publishable_0Rqln8axonR6vGvlQwDDpQ_n7uLnoWT";
 const MANAGER_UID = "b10b63ed-e4bf-4b49-a670-c6cbc40bec39";
+// صلاحيات المدير العام ومسؤولي الوحدات تُقرأ من جلسة Supabase و user_profiles.
+let currentUser = null;
+let currentProfile = null;
+let isManager = false;
 const CARD_BASE_URL = "https://labiad-mateial.wassimlabiad17.workers.dev/";
 
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -215,6 +242,7 @@ let maintenances = [];
 let currentVehicleEquipmentMaterielId = null;
 let currentVehicleEquipmentId = null;
 let vehicleEquipment = [];
+let vehicleGalleryPhotos = [];
 let vehicleEquipmentExcelRecords = [];
 let recoveryMode = false;
 
@@ -259,16 +287,54 @@ function setLoggedIn() {
 }
 async function acceptSession(session) {
   const user = session?.user;
-  if (!user) { setLoggedOut(); return false; }
-  if (user.id !== MANAGER_UID) {
-    await db.auth.signOut();
-    setLoggedOut("Accès refusé : compte non autorisé. | الدخول مرفوض.");
-    return false;
+  if (!user) { currentUser=null; currentProfile=null; isManager=false; setLoggedOut(); return false; }
+
+  // المدير العام معروف بمعرّفه الثابت؛ بقية الحسابات يجب أن تملك ملفاً صالحاً في user_profiles.
+  currentUser = user;
+  isManager = user.id === MANAGER_UID;
+  currentProfile = null;
+  if (!isManager) {
+    const {data,error} = await db.from("user_profiles")
+      .select("user_id,department_id,role").eq("user_id",user.id).maybeSingle();
+    if (error) {
+      await db.auth.signOut(); currentUser=null;
+      setLoggedOut("تعذر قراءة صلاحيات الحساب: " + error.message);
+      return false;
+    }
+    if (!data || data.role !== "responsable" || !data.department_id) {
+      await db.auth.signOut(); currentUser=null;
+      setLoggedOut("هذا الحساب غير مربوط بوحدة أو لا يملك دور مسؤول وحدة. | Compte non autorisé.");
+      return false;
+    }
+    currentProfile = data;
   }
+
   setLoggedIn();
-  try { await loadDepartments(); await loadEquipment(); }
-  catch (e) { showMessage("appMessage", "Erreur de chargement : " + e.message); }
+  $("currentAccountLabel").textContent = isManager
+    ? "المدير العام | Accès global"
+    : "مسؤول الوحدة | " + (currentProfile.department_id || "");
+  try {
+    await loadDepartments();
+    await loadEquipment();
+    applyRoleInterface();
+    if (!isManager) {
+      const dept = departments.find(d => d.id === currentProfile.department_id);
+      $("currentAccountLabel").textContent = "مسؤول الوحدة | " + (dept?.name_ar || dept?.name_fr || currentProfile.department_id);
+    }
+  } catch (e) { showMessage("appMessage", "Erreur de chargement : " + e.message); }
   return true;
+}
+function applyRoleInterface() {
+  const departmentSelect = $("department");
+  if (!isManager) {
+    departmentSelect.value = currentProfile.department_id;
+    departmentSelect.disabled = true;
+    departmentSelect.title = "لا يمكن لمسؤول الوحدة تغيير الوحدة المخصصة لحسابه.";
+  } else {
+    departmentSelect.disabled = false;
+    departmentSelect.title = "";
+  }
+  // يبقى استيراد Excel متاحاً، لكن كل سجل لمسؤول الوحدة يُربط تلقائياً بوحدته.
 }
 
 /* AUTH */
@@ -316,29 +382,41 @@ async function handlePasswordRecovery(event) {
   } catch(e) { showMessage("recoveryMessage","تعذر تغيير كلمة المرور: "+e.message); }
   finally { setBusy(btn,false); }
 }
-async function handleLogout() { await db.auth.signOut(); setLoggedOut(); }
+async function handleLogout() { await db.auth.signOut(); currentUser=null; currentProfile=null; isManager=false; setLoggedOut(); }
 
 /* DEPARTMENTS */
 async function loadDepartments() {
-  const {data,error} = await db.from("departments").select("id,name_fr,name_ar").order("name_fr");
+  let query = db.from("departments").select("id,name_fr,name_ar").order("name_fr");
+  if (!isManager && currentProfile?.department_id) query = query.eq("id",currentProfile.department_id);
+  const {data,error} = await query;
   if (error) throw error;
   departments = data || [];
-  $("department").innerHTML = '<option value="">-- Non spécifié | غير محدد --</option>' +
-    departments.map(d => `<option value="${escapeHtml(d.id)}">${escapeHtml(d.name_fr)} / ${escapeHtml(d.name_ar)}</option>`).join("");
+  $("department").innerHTML = isManager ? '<option value="">-- Non spécifié | غير محدد --</option>' : "";
+  $("department").innerHTML += departments.map(d => `<option value="${escapeHtml(d.id)}">${escapeHtml(d.name_fr)} / ${escapeHtml(d.name_ar)}</option>`).join("");
+  if (!isManager && currentProfile?.department_id) $("department").value = currentProfile.department_id;
 }
 
 /* EQUIPMENT */
 async function loadEquipment() {
   clearMessage("appMessage");
   $("equipmentRows").innerHTML = '<tr><td colspan="6">Chargement... | جار التحميل...</td></tr>';
-  const {data,error} = await db.from("materiels")
-    .select("id,public_id,inventory_number,designation_fr,designation_ar,registration_number,serial_number,status,current_odometer_km")
+  let query = db.from("materiels")
+    .select("id,public_id,inventory_number,designation_fr,designation_ar,registration_number,serial_number,status,current_odometer_km,department_id")
     .order("inventory_number");
+  if (!isManager && currentProfile?.department_id) query = query.eq("department_id",currentProfile.department_id);
+  const {data,error} = await query;
   if (error) throw error;
   currentRecords = data || [];
   renderEquipment();
   renderVehicleOptions();
+  if (isManager) await loadManagerMaintenanceOverview();
 }
+function toggleDepartmentGroup(groupId) {
+  const panel = document.getElementById(groupId);
+  if (!panel) return;
+  panel.classList.toggle("hidden");
+}
+
 function renderEquipment() {
   const term = normalizeText($("searchBox").value);
   const records = currentRecords.filter(r => [
@@ -347,7 +425,8 @@ function renderEquipment() {
   if (!records.length) {
     $("equipmentRows").innerHTML = '<tr><td colspan="6">Aucun matériel trouvé | لا يوجد عتاد</td></tr>'; return;
   }
-  $("equipmentRows").innerHTML = records.map(r => `<tr>
+
+  const renderRow = r => `<tr>
     <td>${escapeHtml(r.inventory_number)}</td><td>${escapeHtml(r.designation_fr)}</td>
     <td dir="rtl">${escapeHtml(r.designation_ar)}</td><td>${escapeHtml(r.registration_number || "")}</td>
     <td>${escapeHtml(r.status)}</td><td><div class="actions">
@@ -356,7 +435,40 @@ function renderEquipment() {
       <button class="secondary" data-action="maintenance" data-id="${escapeHtml(r.id)}">صيانة</button>
       <button class="secondary" data-action="vehicle-equipment" data-id="${escapeHtml(r.id)}">معدات السيارة</button>
       <button class="danger" data-action="delete" data-id="${escapeHtml(r.id)}">Supprimer</button>
-    </div></td></tr>`).join("");
+    </div></td></tr>`;
+
+  // المدير العام يرى العتاد مجمّعاً حسب الوحدة، أما المسؤول فيرى قائمة وحدته كما كانت.
+  if (isManager) {
+    const groups = new Map();
+    for (const r of records) {
+      const key = r.department_id || "__unassigned__";
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(r);
+    }
+    const orderedGroups = [...groups.entries()].sort((a,b) => {
+      if (a[0] === "__unassigned__") return 1;
+      if (b[0] === "__unassigned__") return -1;
+      const da = departments.find(d => d.id === a[0]);
+      const dbb = departments.find(d => d.id === b[0]);
+      const na = normalizeText(da?.name_ar || da?.name_fr || "");
+      const nb = normalizeText(dbb?.name_ar || dbb?.name_fr || "");
+      const priority = name => name.includes("الوحدة الرئيسية") || name.includes("unité principale") ? 0 : name === "القطاع" || name.includes("secteur") ? 1 : 2;
+      return priority(na) - priority(nb) || na.localeCompare(nb, "ar");
+    });
+    const buttons = orderedGroups.map(([departmentId, items]) => {
+      const dept = departments.find(d => d.id === departmentId);
+      const title = departmentId === "__unassigned__"
+        ? "غير محدد | Non affecté"
+        : `${escapeHtml(dept?.name_ar || dept?.name_fr || "وحدة غير معروفة")} / ${escapeHtml(dept?.name_fr || "")}`;
+      const groupKey = `equipment-${departmentId}`;
+      return `<button type="button" class="department-toggle" onclick="toggleDepartmentGroup('${groupKey}')"><span>${title}</span><span>${items.length} قطعة　＋</span></button>
+        <div id="${groupKey}" class="hidden"><div class="tablewrap"><table><thead><tr><th>N° inventaire</th><th>Désignation</th><th>المسمى</th><th>Matricule</th><th>État / الحالة</th><th>Actions</th></tr></thead><tbody>${items.map(renderRow).join("")}</tbody></table></div></div>`;
+    }).join("");
+    $("equipmentRows").innerHTML = `<tr><td colspan="6"><div class="department-buttons">${buttons}</div></td></tr>`;
+    return;
+  }
+
+  $("equipmentRows").innerHTML = records.map(renderRow).join("");
 }
 function formData() {
   const price = value("purchasePrice"), year = value("commissioningYear"), odo = value("currentOdometer");
@@ -369,7 +481,7 @@ function formData() {
     purchase_price:price === "" ? null : Number(price),currency_code:value("currencyCode") || "DZD",
     commissioning_year:year === "" ? null : Number(year),volume:nullable("volume"),fuel_type:nullable("fuelType"),
     engine_capacity:nullable("engineCapacity"),tank_capacity:nullable("tankCapacity"),
-    current_odometer_km:odo === "" ? null : Number(odo),department_id:nullable("department"),
+    current_odometer_km:odo === "" ? null : Number(odo),department_id:isManager ? nullable("department") : currentProfile?.department_id,
     status:value("status"),location:nullable("location"),description_fr:nullable("descriptionFr"),
     description_ar:nullable("descriptionAr"),observations_fr:nullable("observationsFr"),
     observations_ar:nullable("observationsAr"),updated_at:new Date().toISOString()
@@ -379,6 +491,7 @@ function resetForm() {
   $("equipmentForm").reset(); $("recordId").value = "";
   $("formTitle").textContent = "Ajouter un matériel | إضافة عتاد";
   $("status").value = "in_service"; $("currencyCode").value = "DZD";
+  $("department").value = isManager ? "" : (currentProfile?.department_id || "");
   $("equipmentPhoto").value = ""; $("photoPreview").src = ""; $("photoPreview").classList.add("hidden");
 }
 async function uploadEquipmentPhoto(materielId) {
@@ -397,6 +510,9 @@ async function uploadEquipmentPhoto(materielId) {
 async function saveEquipment(event) {
   event.preventDefault(); clearMessage("appMessage");
   const id = $("recordId").value, payload = formData();
+  if (!isManager && (!currentProfile?.department_id || (id && !currentRecords.some(r => String(r.id) === String(id)))))
+    return showMessage("appMessage","لا تملك صلاحية تعديل هذا العتاد أو لا توجد وحدة مرتبطة بحسابك.");
+  if (!isManager && id) payload.department_id = currentProfile.department_id;
   if (!payload.inventory_number || !payload.designation_fr || !payload.designation_ar)
     return showMessage("appMessage","Veuillez remplir les champs obligatoires. | يرجى ملء الحقول الإجبارية.");
   if (payload.purchase_price !== null && (!Number.isFinite(payload.purchase_price) || payload.purchase_price < 0))
@@ -419,7 +535,10 @@ async function saveEquipment(event) {
 }
 async function editEquipment(id) {
   clearMessage("appMessage");
-  const {data,error} = await db.from("materiels").select("*").eq("id",id).single();
+  if (!currentRecords.some(r => String(r.id) === String(id))) return showMessage("appMessage","هذا العتاد غير موجود ضمن صلاحيات حسابك.");
+  let query = db.from("materiels").select("*").eq("id",id);
+  if (!isManager) query = query.eq("department_id",currentProfile.department_id);
+  const {data,error} = await query.single();
   if (error) return showMessage("appMessage","Erreur : "+error.message);
   const map = {
     inventory:"inventory_number",designationFr:"designation_fr",designationAr:"designation_ar",
@@ -439,6 +558,7 @@ async function editEquipment(id) {
 }
 async function deleteEquipment(id) {
   const record = currentRecords.find(r => String(r.id) === String(id)); if (!record) return;
+  if (!isManager && record.department_id !== currentProfile?.department_id) return showMessage("appMessage","لا تملك صلاحية حذف عتاد هذه الوحدة.");
   if (!confirm(`Supprimer ${record.inventory_number} ?\nهل تريد حذف هذا العتاد؟`)) return;
   const {error} = await db.from("materiels").delete().eq("id",id);
   if (error) return showMessage("appMessage","Erreur de suppression : "+error.message);
@@ -460,6 +580,54 @@ function downloadQr() {
   const source = canvas ? canvas.toDataURL("image/png") : (img?.src || "");
   if (!source) return alert("Le QR n'est pas prêt. | رمز QR غير جاهز.");
   const a = document.createElement("a"); a.href = source; a.download = "QR-materiel.png"; document.body.appendChild(a); a.click(); a.remove();
+}
+
+/* MANAGER MAINTENANCE OVERVIEW — grouped by the equipment department */
+async function loadManagerMaintenanceOverview() {
+  const panel = $("maintenanceOverviewPanel");
+  if (!isManager || !panel) return;
+  panel.classList.remove("hidden");
+  const host = $("maintenanceOverview");
+  host.innerHTML = '<p class="small">جار تحميل سجلات الصيانة...</p>';
+  clearMessage("maintenanceOverviewMessage");
+  try {
+    const {data, error} = await db.from("maintenances").select("*").order("maintenance_date", {ascending:false});
+    if (error) throw error;
+    const equipmentById = new Map(currentRecords.map(item => [String(item.id), item]));
+    const grouped = new Map();
+    for (const maintenance of (data || [])) {
+      const equipment = equipmentById.get(String(maintenance.materiel_id));
+      // لا نعرض سجلاً لا يمكن ربطه بعتاد ظاهر للمدير.
+      if (!equipment) continue;
+      const key = equipment.department_id || "__unassigned__";
+      if (!grouped.has(key)) grouped.set(key, []);
+      grouped.get(key).push({maintenance, equipment});
+    }
+    const keys = [...grouped.keys()].sort((a,b) => {
+      if (a === "__unassigned__") return 1;
+      if (b === "__unassigned__") return -1;
+      const da = departments.find(d => d.id === a), dbb = departments.find(d => d.id === b);
+      return (da?.name_ar || da?.name_fr || "").localeCompare(dbb?.name_ar || dbb?.name_fr || "", "ar");
+    });
+    if (!keys.length) {
+      host.innerHTML = '<p class="small">لا توجد عمليات صيانة مسجلة حالياً.</p>';
+      return;
+    }
+    host.innerHTML = keys.map(key => {
+      const dept = departments.find(d => d.id === key);
+      const title = key === "__unassigned__" ? "غير محدد | Non affecté" : `${escapeHtml(dept?.name_ar || dept?.name_fr || "وحدة غير معروفة")} / ${escapeHtml(dept?.name_fr || "")}`;
+      const rows = grouped.get(key);
+      const groupId = `maintenance-${key}`;
+      return `<section style="margin:8px 0">
+        <button type="button" class="department-toggle" onclick="toggleDepartmentGroup('${groupId}')"><span>${title}</span><span>${rows.length} عملية صيانة　＋</span></button>
+        <div id="${groupId}" class="hidden"><div class="tablewrap"><table><thead><tr><th>رقم الجرد</th><th>العتاد</th><th>تاريخ الصيانة</th><th>النوع</th><th>العداد</th><th>الصيانة القادمة</th><th>التكلفة</th><th>المتعهد</th></tr></thead><tbody>
+        ${rows.map(({maintenance:m,equipment:e}) => `<tr><td>${escapeHtml(e.inventory_number || "—")}</td><td>${escapeHtml(e.designation_ar || e.designation_fr || "—")}</td><td>${escapeHtml(m.maintenance_date || "—")}</td><td>${escapeHtml(m.maintenance_type || "—")}</td><td>${m.odometer_km ?? "—"}</td><td>${m.next_maintenance_km ?? "—"}</td><td>${m.cost ?? "—"} ${escapeHtml(m.currency_code || "")}</td><td>${escapeHtml(m.provider || "—")}</td></tr>`).join("")}
+        </tbody></table></div></div></section>`;
+    }).join("");
+  } catch (e) {
+    host.innerHTML = "";
+    showMessage("maintenanceOverviewMessage", "تعذر تحميل سجل الصيانة: " + e.message);
+  }
 }
 
 /* MAINTENANCE */
@@ -552,7 +720,7 @@ function renderVehicleOptions() {
 async function openVehicleEquipment(materielId) {
   currentVehicleEquipmentMaterielId = materielId; $("vehicleEquipmentPanel").classList.remove("hidden");
   renderVehicleOptions(); $("vehicleEquipmentVehicle").value = materielId;
-  resetVehicleEquipmentForm(); await loadVehicleEquipment(materielId);
+  resetVehicleEquipmentForm(); await loadVehicleEquipment(materielId); await loadVehicleGallery(materielId);
   $("vehicleEquipmentPanel").scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function loadVehicleEquipment(materielId) {
@@ -571,6 +739,102 @@ function renderVehicleEquipment() {
     <button type="button" class="secondary" data-vehicle-equipment-action="edit" data-id="${escapeHtml(item.id)}">تعديل</button>
     <button type="button" class="danger" data-vehicle-equipment-action="delete" data-id="${escapeHtml(item.id)}">حذف</button></td></tr>`).join("");
 }
+/* VEHICLE PHOTO GALLERY */
+function vehicleGalleryPublicUrl(storagePath) {
+  const encodedPath = String(storagePath || "").split("/").map(encodeURIComponent).join("/");
+  return `${SUPABASE_URL}/storage/v1/object/public/vehicle-gallery/${encodedPath}`;
+}
+function renderVehicleGallery() {
+  const host = $("vehicleGalleryList");
+  if (!host) return;
+  if (!vehicleGalleryPhotos.length) {
+    host.innerHTML = '<p class="small">لا توجد صور إضافية لهذه المركبة حالياً.</p>';
+    return;
+  }
+  host.innerHTML = vehicleGalleryPhotos.map(photo => `
+    <div style="background:#fff;border:1px solid #e5e9ef;border-radius:9px;padding:8px;min-width:0">
+      <a href="${escapeHtml(vehicleGalleryPublicUrl(photo.storage_path))}" target="_blank" rel="noopener">
+        <img src="${escapeHtml(vehicleGalleryPublicUrl(photo.storage_path))}" alt="صورة المركبة" loading="lazy" style="width:100%;height:105px;object-fit:cover;border-radius:6px">
+      </a>
+      <div class="small" style="margin:6px 0;word-break:break-word">${escapeHtml(photo.caption || "صورة المركبة")}</div>
+      <button type="button" class="danger" data-gallery-delete="${escapeHtml(photo.id)}" style="width:100%">حذف الصورة</button>
+    </div>`).join("");
+}
+async function loadVehicleGallery(materielId) {
+  const host = $("vehicleGalleryList");
+  if (!materielId) {
+    vehicleGalleryPhotos = [];
+    if (host) host.innerHTML = '<p class="small">اختر المركبة لعرض صورها.</p>';
+    return;
+  }
+  if (host) host.innerHTML = '<p class="small">جار تحميل الصور...</p>';
+  try {
+    const {data,error} = await db.from("vehicle_gallery_photos")
+      .select("id,materiel_id,storage_path,caption,created_at")
+      .eq("materiel_id",materielId).order("created_at",{ascending:false});
+    if (error) throw error;
+    vehicleGalleryPhotos = data || [];
+    renderVehicleGallery();
+  } catch (e) {
+    if (host) host.innerHTML = '';
+    showMessage("vehicleGalleryMessage","تعذر تحميل صور المركبة: "+e.message);
+  }
+}
+async function uploadVehicleGalleryPhotos() {
+  const materielId = $("vehicleEquipmentVehicle").value;
+  const files = Array.from($("vehicleGalleryFiles").files || []);
+  if (!materielId) return showMessage("vehicleGalleryMessage","اختر المركبة أولاً.");
+  if (!files.length) return showMessage("vehicleGalleryMessage","اختر صورة واحدة على الأقل.");
+  const allowed = {"image/jpeg":"jpg","image/png":"png","image/webp":"webp"};
+  for (const file of files) {
+    if (!allowed[file.type] || file.size > 5*1024*1024) {
+      return showMessage("vehicleGalleryMessage","كل صورة يجب أن تكون JPG أو PNG أو WEBP وألا يتجاوز حجمها 5 ميغابايت.");
+    }
+  }
+  const button = $("uploadVehicleGalleryBtn");
+  setBusy(button,true,"Téléversement...");
+  clearMessage("vehicleGalleryMessage");
+  let uploadedCount = 0;
+  try {
+    for (const file of files) {
+      const ext = allowed[file.type];
+      const unique = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      const storagePath = `${materielId}/${unique}.${ext}`;
+      const {error:uploadError} = await db.storage.from("vehicle-gallery").upload(storagePath,file,{contentType:file.type,upsert:false});
+      if (uploadError) throw uploadError;
+      const {error:rowError} = await db.from("vehicle_gallery_photos").insert({
+        materiel_id:materielId, storage_path:storagePath,
+        caption:nullable("vehicleGalleryCaption"), uploaded_by:currentUser.id
+      });
+      if (rowError) {
+        await db.storage.from("vehicle-gallery").remove([storagePath]);
+        throw rowError;
+      }
+      uploadedCount++;
+    }
+    $("vehicleGalleryFiles").value = "";
+    $("vehicleGalleryCaption").value = "";
+    $("uploadVehicleGalleryBtn").disabled = true;
+    await loadVehicleGallery(materielId);
+    showMessage("vehicleGalleryMessage",`تم رفع ${uploadedCount} صورة بنجاح.`,true);
+  } catch (e) {
+    await loadVehicleGallery(materielId);
+    showMessage("vehicleGalleryMessage","تعذر رفع الصور: "+e.message);
+  } finally { setBusy(button,false); }
+}
+async function deleteVehicleGalleryPhoto(id) {
+  const photo = vehicleGalleryPhotos.find(item => String(item.id) === String(id));
+  if (!photo || !confirm("هل تريد حذف هذه الصورة نهائياً؟")) return;
+  try {
+    const {error:storageError} = await db.storage.from("vehicle-gallery").remove([photo.storage_path]);
+    if (storageError) throw storageError;
+    const {error:rowError} = await db.from("vehicle_gallery_photos").delete().eq("id",id);
+    if (rowError) throw rowError;
+    await loadVehicleGallery(currentVehicleEquipmentMaterielId);
+    showMessage("vehicleGalleryMessage","تم حذف الصورة.",true);
+  } catch (e) { showMessage("vehicleGalleryMessage","تعذر حذف الصورة: "+e.message); }
+}
+
 function resetVehicleEquipmentForm() {
   $("vehicleEquipmentForm").reset(); currentVehicleEquipmentId = null; $("vehicleEquipmentId").value = "";
   $("vehicleEquipmentFormTitle").textContent = "Ajouter un équipement | إضافة معدات"; clearMessage("vehicleEquipmentMessage");
@@ -689,6 +953,7 @@ async function previewExcelFile() {
 }
 async function importExcelRecords() {
   if (!excelRecords.length) return showMessage("excelMessage","يرجى اختيار ملف Excel ومعاينته أولاً.");
+  if (!isManager && !currentProfile?.department_id) return showMessage("excelMessage","لا توجد وحدة مرتبطة بهذا الحساب.");
   const imported = [], skipped = [];
   for (const r of excelRecords) {
     const inventory = excelCell(r,"inventory_number");
@@ -709,7 +974,8 @@ async function importExcelRecords() {
       current_odometer_km:(excelCell(r,"current_odometer_km") === null ? null : Number(excelCell(r,"current_odometer_km"))),
       location:excelCell(r,"location"),status:excelCell(r,"status") || "in_service",
       description_fr:excelCell(r,"description_fr"),description_ar:excelCell(r,"description_ar"),
-      observations_fr:excelCell(r,"observations_fr"),observations_ar:excelCell(r,"observations_ar")
+      observations_fr:excelCell(r,"observations_fr"),observations_ar:excelCell(r,"observations_ar"),
+      ...(isManager ? {} : {department_id:currentProfile?.department_id})
     };
     if (payload.current_odometer_km !== null && (!Number.isInteger(payload.current_odometer_km) || payload.current_odometer_km < 0)) { skipped.push(r); continue; }
     imported.push(payload);
@@ -765,8 +1031,8 @@ function bindAdminEvents() {
   $("vehicleEquipmentVehicle").addEventListener("change",async event=>{
     const id=event.target.value; currentVehicleEquipmentMaterielId=id||null; resetVehicleEquipmentForm();
     vehicleEquipmentExcelRecords=[]; $("vehicleExcelPreview").innerHTML=""; $("importVehicleExcelBtn").disabled=true;
-    if(id) await loadVehicleEquipment(id);
-    else {vehicleEquipment=[];renderVehicleEquipment();}
+    if(id) { await loadVehicleEquipment(id); await loadVehicleGallery(id); }
+    else {vehicleEquipment=[];renderVehicleEquipment();await loadVehicleGallery(null);}
   });
   $("vehicleEquipmentForm").addEventListener("submit",saveVehicleEquipment);
   $("resetVehicleEquipmentBtn").addEventListener("click",resetVehicleEquipmentForm);
@@ -779,6 +1045,16 @@ function bindAdminEvents() {
   $("downloadVehicleTemplateBtn").addEventListener("click",downloadVehicleEquipmentTemplate);
   $("previewVehicleExcelBtn").addEventListener("click",previewVehicleExcelFile);
   $("importVehicleExcelBtn").addEventListener("click",importVehicleEquipmentExcel);
+  $("vehicleGalleryFiles").addEventListener("change",()=>{
+    const files=Array.from($("vehicleGalleryFiles").files || []);
+    $("uploadVehicleGalleryBtn").disabled=!files.length;
+    clearMessage("vehicleGalleryMessage");
+  });
+  $("uploadVehicleGalleryBtn").addEventListener("click",uploadVehicleGalleryPhotos);
+  $("vehicleGalleryList").addEventListener("click",async event=>{
+    const btn=event.target.closest("button[data-gallery-delete]");
+    if(btn) await deleteVehicleGalleryPhoto(btn.dataset.galleryDelete);
+  });
   $("excelFile").addEventListener("change",()=>{excelRecords=[];$("excelPreview").innerHTML="";$("importExcelBtn").disabled=true;clearMessage("excelMessage");});
   $("previewExcelBtn").addEventListener("click",previewExcelFile);
   $("importExcelBtn").addEventListener("click",importExcelRecords);
@@ -798,7 +1074,7 @@ db.auth.onAuthStateChange((event,session)=>{
     recoveryMode=true; $("loginPanel").classList.add("hidden");
     $("passwordRecoveryPanel").classList.remove("hidden"); $("appPanel").style.display="none";
   } else if(event==="SIGNED_OUT") {
-    setLoggedOut();
+    currentUser=null; currentProfile=null; isManager=false; setLoggedOut();
   } else if(event==="SIGNED_IN" && session && !recoveryMode) {
     // Defer UI/database work until Supabase finishes its auth callback.
     setTimeout(()=>acceptSession(session),0);
