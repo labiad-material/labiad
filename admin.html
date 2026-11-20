@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#163b67">
+<meta name="theme-color" content="#163b67">\n<link rel="manifest" href="./manifest.json">\n<link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">\n<link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
 <title>Gestion du matériel | إدارة العتاد</title>
 <style>
 *{box-sizing:border-box}
@@ -45,7 +45,7 @@ th{background:#edf2f8;color:#163b67}.small{font-size:12px;color:#68778a;overflow
 </head>
 <body>
 <header>
-  <h1>Direction de la Protection Civile de Ghardaïa</h1>
+  <h1>مديرية الحماية المدنية لولاية غرداية </h1>
   <p>Gestion du matériel | إدارة العتاد</p>
 </header>
 <main>
@@ -73,7 +73,7 @@ th{background:#edf2f8;color:#163b67}.small{font-size:12px;color:#68778a;overflow
 <section id="appPanel">
   <section class="card">
     <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
-      <div><h2 style="margin:0">Unité principale | الوحدة الرئيسية</h2><p id="currentAccountLabel" class="small" style="margin:6px 0 0"></p></div>
+      <div><h2 style="margin:0">الحماية المدنية لولاية غرداية</h2><p id="currentAccountLabel" class="small" style="margin:6px 0 0"></p></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
         <button id="logoutBtn" class="secondary" type="button">Déconnexion | خروج</button>
       </div>
@@ -311,15 +311,15 @@ async function acceptSession(session) {
 
   setLoggedIn();
   $("currentAccountLabel").textContent = isManager
-    ? "المدير العام | Accès global"
-    : "مسؤول الوحدة | " + (currentProfile.department_id || "");
+    ? "المدير العام "
+    : "قائد الوحدة | " + (currentProfile.department_id || "");
   try {
     await loadDepartments();
     await loadEquipment();
     applyRoleInterface();
     if (!isManager) {
       const dept = departments.find(d => d.id === currentProfile.department_id);
-      $("currentAccountLabel").textContent = "مسؤول الوحدة | " + (dept?.name_ar || dept?.name_fr || currentProfile.department_id);
+      $("currentAccountLabel").textContent = "قائد الوحدة | " + (dept?.name_ar || dept?.name_fr || currentProfile.department_id);
     }
   } catch (e) { showMessage("appMessage", "Erreur de chargement : " + e.message); }
   return true;
