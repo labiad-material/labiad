@@ -883,18 +883,24 @@ function displayVehicleEquipment(equipmentList) {
       details.append(categoryLine);
     }
 
-    const observations = [
-      equipment.observations_ar,
-      equipment.observations_fr
-    ].filter(Boolean).join(" | ");
+    
+const observations = [
+  equipment.observations_ar,
+  equipment.observations_fr
+].filter(Boolean).join(" | ");
 
-    if (observations) {
-      const observationLine = document.createElement("div");
-      observationLine.textContent =
-        "Observations | ملاحظات : " + observations;
-      <span style="color: red; font-weight: bold;">
-      details.append(observationLine);
-    }
+if (observations) {
+  const observationLine = document.createElement("div");
+
+  observationLine.style.color = "#ff0000";
+  observationLine.style.fontWeight = "bold";
+
+  observationLine.textContent =
+    "Observations | ملاحظات : " + observations;
+
+  details.append(observationLine);
+}
+
 
     item.append(details);
     list.append(item);
